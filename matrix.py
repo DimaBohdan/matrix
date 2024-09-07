@@ -1,4 +1,3 @@
-c = [[4,5,1],[1,2,1],[2,3,4]]
 def fill(str):
    a = str.split(']')
    list = []
@@ -32,6 +31,20 @@ class Matrix:
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
+'''
+   def __pow__(self, l):
+      if self.n == self.m:
+         for s in range(l):
+            c = [[None for __ in range(self.n)] for __ in range(self.m)]
+            for i in range(self.m):
+               for j in range(self.n):
+                  c[i][j] = sum(self.string[i][k] * self.string[k][j] for k in range(self.m))
+            k = Matrix(self.m, self.n, c)
+            k = k**(l-1)
+         return
+      else:
+         return "Can not be powed" 
+'''
    @classmethod
    def transpon_matrix_class(cls, self):
       return cls(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
@@ -44,13 +57,20 @@ class Matrix:
             for i in k:
                var = [[i + n for n in m] for m in other.string]
          return Matrix(self.m, self.n, var)
+   def __eq__(self, other):
+      if self.string == other.string:
+         return True
+      else:
+         return False
    def __mul__(self,other):
       if self.n == other.m:
-         c = [[None for __ in range(other.n)] for __ in range(self.m)]    
+         c = [[None for __ in range(other.n)] for __ in range(self.m)]
          for i in range(self.m):
-            for j in range(other.n):       
+            for j in range(other.n):
                c[i][j] = sum(self.string[i][k] * other.string[k][j] for k in range(other.m))
          return Matrix(self.m, other.n, c)
+      else:
+         return "Can not be multiplied"
 class Coordinate:
    def __init__(self, x, y, clss):
       self.x = x
@@ -114,11 +134,19 @@ class Coordinate:
          self.right(self)
          self.left(self)
 
+
+
+
 #input as example: [[2,3,1],[3,4,5],[3,7,9]]
 a = Matrix(3,3,fill(input()))
 print(a.transpon_fun())
 d = a.transpon_matrix_class(a)
-print(d)
+#print((a**3).string)
+if a==d:
+   print('Ok')
+else:
+   print('No')
+#print(d)
 #input example: 4
 print(d.multiply_num_matr_fun(5))
 e = a.multiply_matrix_class(a,int(input("num: ")))
