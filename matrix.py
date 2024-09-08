@@ -31,6 +31,26 @@ class Matrix:
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
+
+   def __pow__(self, n):
+      if self.m != self.n:
+         return "Cannot raise a non-square matrix to a power"
+
+      # Initialize the result as the identity matrix
+      result = Matrix(self.m, self.n, [[1 if i == j else 0 for j in range(self.n)] for i in range(self.m)])
+      base = self
+
+      # Exponentiation by squaring
+      while n > 0:
+         if n % 2 == 1:
+            result = result * base
+         base = base * base
+         n //= 2
+
+      return result
+
+   def __str__(self):
+      return '\n'.join([' '.join(map(str, row)) for row in self.string])
    @classmethod
    def transpon_matrix_class(cls, self):
       return cls(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
@@ -57,18 +77,6 @@ class Matrix:
          return Matrix(self.m, other.n, c)
       else:
          return "Can not be multiplied"
-   def __pow__(self, l):
-      if l = 1:
-         return Matrix(self.m, self.n, self.string)
-      if self.n == self.m:
-         c = [[None for __ in range(self.n)] for __ in range(self.m)]
-         for i in range(self.m):
-            for j in range(self.n):
-               c[i][j] = sum(self.string[i][k] * self.string[k][j] for k in range(self.m))
-         k = Matrix(self.m, self.n, c)
-         return k**(l-1)
-      else:
-         return "Can not be powed" 
 class Coordinate:
    def __init__(self, x, y, clss):
       self.x = x
@@ -132,14 +140,12 @@ class Coordinate:
          self.right(self)
          self.left(self)
 
-
-
-
 #input as example: [[2,3,1],[3,4,5],[3,7,9]]
 a = Matrix(3,3,fill(input()))
 print(a.transpon_fun())
 d = a.transpon_matrix_class(a)
-#print((a**3).string)
+print(a)
+print((a**3).string)
 if a==d:
    print('Ok')
 else:
