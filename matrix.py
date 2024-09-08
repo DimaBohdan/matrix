@@ -58,15 +58,15 @@ class Matrix:
       else:
          return "Can not be multiplied"
    def __pow__(self, l):
+      if l = 1:
+         return Matrix(self.m, self.n, self.string)
       if self.n == self.m:
-         for s in range(l):
-            c = [[None for __ in range(self.n)] for __ in range(self.m)]
-            for i in range(self.m):
-               for j in range(self.n):
-                  c[i][j] = sum(self.string[i][k] * self.string[k][j] for k in range(self.m))
-            k = Matrix(self.m, self.n, c)
-            k = k**(l-1)
-         return
+         c = [[None for __ in range(self.n)] for __ in range(self.m)]
+         for i in range(self.m):
+            for j in range(self.n):
+               c[i][j] = sum(self.string[i][k] * self.string[k][j] for k in range(self.m))
+         k = Matrix(self.m, self.n, c)
+         return k**(l-1)
       else:
          return "Can not be powed" 
 class Coordinate:
