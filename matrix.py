@@ -31,15 +31,35 @@ class Matrix:
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
-
+   def determinant(self):
+      rang = self.n
+      matrix = self.string
+      if self.m == rang:
+         match rang:
+            case 1:
+               return matrix[0][0]
+            case rang:
+               sum_of_determinants = 0
+               for i in range(rang):
+                  list_of_matrix = []
+                  for k in range(rang):
+                     matrix_of_the_first_range = []
+                     for j in range(rang):
+                        if k != 0 and j != 1:
+                           matrix_of_the_first_range += [matrix[k][j]]
+                           print(matrix_of_the_first_range)
+                     if matrix_of_the_first_range != []:
+                        list_of_matrix += [tuple(matrix_of_the_first_range)]
+                  sum_of_determinants += matrix[0][i] * Matrix(rang - 1, rang - 1, tuple(list_of_matrix)).determinant() * (-1)**i
+               return sum_of_determinants
+      else:
+         return 'Cannot find a determinant for a non-square matrix'
    def __pow__(self, n):
       if self.m != self.n:
          return "Cannot raise a non-square matrix to a power"
-
       # Initialize the result as the identity matrix
       result = Matrix(self.m, self.n, [[1 if i == j else 0 for j in range(self.n)] for i in range(self.m)])
       base = self
-
       # Exponentiation by squaring
       while n > 0:
          if n % 2 == 1:
@@ -152,6 +172,7 @@ else:
    print('No')
 #print(d)
 #input example: 4
+print(a.determinant())
 print(d.multiply_num_matr_fun(5))
 e = a.multiply_matrix_class(a,int(input("num: ")))
 print(e.transpon_matrix_class(e).string)
