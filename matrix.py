@@ -1,3 +1,5 @@
+from functools import cache
+
 def fill(str):
    a = str.split(']')
    list = []
@@ -31,6 +33,29 @@ class Matrix:
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
+   def alg_adjunct(self):
+      rang = self.n
+      matrix = self.string
+      if self.m == rang:
+         match rang:
+            case 1:
+               return matrix[0][0]
+            case rang:
+               list_of_alg_adjunct = 0
+               for i in range(rang):
+                  list_of_matrix = []
+                  for k in range(rang):
+                     matrix_of_the_first_range = []
+                     for j in range(rang):
+                        if k != 0 and j != i:
+                           matrix_of_the_first_range += [matrix[k][j]]
+                     if matrix_of_the_first_range != []:
+                        list_of_matrix += [matrix_of_the_first_range]
+                  minor_of_elem = Matrix(rang - 1, rang - 1, list_of_matrix).determinant()
+                  alg_adjunct = minor_of_elem * (-1) ** i
+                  list_of_alg_adjunct += [alg_adjunct]
+               return list_of_alg_adjunct
+
    def determinant(self):
       rang = self.n
       matrix = self.string
@@ -45,15 +70,18 @@ class Matrix:
                   for k in range(rang):
                      matrix_of_the_first_range = []
                      for j in range(rang):
-                        if k != 0 and j != 1:
+                        if k != 0 and j != i:
                            matrix_of_the_first_range += [matrix[k][j]]
-                           print(matrix_of_the_first_range)
                      if matrix_of_the_first_range != []:
-                        list_of_matrix += [tuple(matrix_of_the_first_range)]
-                  sum_of_determinants += matrix[0][i] * Matrix(rang - 1, rang - 1, tuple(list_of_matrix)).determinant() * (-1)**i
+                        list_of_matrix += [matrix_of_the_first_range]
+                  minor_of_elem = Matrix(rang - 1, rang - 1, list_of_matrix).determinant()
+                  alg_adjunct = minor_of_elem * (-1)**i
+                  sum_of_determinants += matrix[0][i] * alg_adjunct
                return sum_of_determinants
       else:
          return 'Cannot find a determinant for a non-square matrix'
+   def inverse_matrix(self):
+      pass
    def __pow__(self, n):
       if self.m != self.n:
          return "Cannot raise a non-square matrix to a power"
@@ -172,7 +200,7 @@ else:
    print('No')
 #print(d)
 #input example: 4
-print(a.determinant())
+print(a.alg_adjunct())
 print(d.multiply_num_matr_fun(5))
 e = a.multiply_matrix_class(a,int(input("num: ")))
 print(e.transpon_matrix_class(e).string)
