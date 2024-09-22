@@ -5,6 +5,7 @@ def fill_matrix(row_num):
       row_list = [float(elem) for elem in input().split(" ")]
       matrix_list.append(row_list)
    return matrix_list
+
 def fill(str):
    a = str.split(']')
    list = []
@@ -22,19 +23,24 @@ def fill(str):
    for k in new_lis:
       new.append([int(i) for i in k])
    return new
+
 class Matrix:
    def __init__(self, m, n, string):
       self.m = m
       self.n = n
       self.string = string
+
    def __del__(self):
       del self
+
    def view(self):
        for i in self.string:
           print(i)
+
    def transpon_fun(self):
       a = [[i[k] for i in self.string] for k in range(self.n)]
       return a
+
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
@@ -61,8 +67,8 @@ class Matrix:
 
          minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
          determinant_sum += (-1) ** i * self.string[0][i] * minor
-
       return determinant_sum
+
    def cofactor (self):
       if self.m != self.n:
          return "Cannot find a cofactor for a non-square matrix"
@@ -70,7 +76,6 @@ class Matrix:
       for i in range(self.m):
          cofactor_row = []
          for j in range(self.n):
-            # Create the minor matrix by removing row i and column j
             sub_matrix = []
             for row in range(self.m):
                if row != i:
@@ -79,15 +84,12 @@ class Matrix:
                      if col != j:
                         sub_row.append(self.string[row][col])
                   sub_matrix.append(sub_row)
-
-            # Find the determinant of the minor
             minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
-
-            # Calculate the cofactor element
             cofactor_element = (-1) ** (i + j) * minor
             cofactor_row.append(cofactor_element)
          cofactor_matrix.append(cofactor_row)
       return Matrix(self.m, self.n, cofactor_matrix)
+
    def inverse_matrix(self):
       determinant = self.determinant()
       if determinant == 0:
@@ -101,43 +103,46 @@ class Matrix:
       # Initialize the result as the identity matrix
       result = Matrix(self.m, self.n, [[1 if i == j else 0 for j in range(self.n)] for i in range(self.m)])
       base = self
-      # Exponentiation by squaring
       while n > 0:
          if n % 2 == 1:
             result = result * base
          base = base * base
          n //= 2
-
       return result
 
    def __str__(self):
       return '\n'.join([' '.join(map(str, row)) for row in self.string])
+
    @classmethod
    def transpon_matrix_class(cls, self):
       return cls(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
-   @classmethod
-   def multiply_matrix_class(cls, self, n):
-      return cls(len(self.multiply_num_matr_fun(n)), len(self.multiply_num_matr_fun(n)[0]), self.multiply_num_matr_fun(n))
+
    def __add__(self, other):
       if self.m == other.m and self.n == other.n:
          for k in self.string:
             for i in k:
                var = [[i + n for n in m] for m in other.string]
          return Matrix(self.m, self.n, var)
+
    def __eq__(self, other):
       if self.string == other.string:
          return True
       else:
          return False
+
    def __mul__(self,other):
-      if self.n == other.m:
-         c = [[None for __ in range(other.n)] for __ in range(self.m)]
-         for i in range(self.m):
-            for j in range(other.n):
-               c[i][j] = sum(self.string[i][k] * other.string[k][j] for k in range(other.m))
-         return Matrix(self.m, other.n, c)
-      else:
-         return "Can not be multiplied"
+      if isinstance(other, Matrix):
+         if self.n == other.m:
+            c = [[None for __ in range(other.n)] for __ in range(self.m)]
+            for i in range(self.m):
+               for j in range(other.n):
+                  c[i][j] = sum(self.string[i][k] * other.string[k][j] for k in range(other.m))
+            return Matrix(self.m, other.n, c)
+         else:
+            return "Can not be multiplied"
+      elif isinstance(other, int):
+         return Matrix(self.m, self.n, self.multiply_num_matr_fun(other))
+
 class Coordinate:
    def __init__(self, x, y, clss):
       self.x = x
@@ -148,30 +153,35 @@ class Coordinate:
          return True
       else:
          return False
+
    @classmethod
    def up(cls, self):
       if self.is_valid_coor():
          return cls(self.x, self.y + 1, self.clss)
       else:
          return "Error"
+
    @classmethod
    def down(cls, self):
       if self.is_valid_coor():
          return cls(self.x, self.y - 1, self.clss)
       else:
          return "Error"
+
    @classmethod
    def right(cls, self):
       if self.is_valid_coor():
          return cls(self.x + 1, self.y, self.clss)
       else:
          return "Error"
+
    @classmethod
    def left(cls, self):
       if self.is_valid_coor():
          return cls(self.x - 1, self.y, self.clss)
       else:
          return "Error"
+
    def possibility(self):
       if self.x == 0:
          if self.y == 0:
@@ -218,15 +228,15 @@ else:
    print('No')
 #print(d)
 #input example: 4
-print(d.multiply_num_matr_fun(5))
-e = a.multiply_matrix_class(a,int(input("num: ")))
+print(d*5)
+e = a
 print(e.transpon_matrix_class(e).string)
 result = a + d
 print(f' New {result.string}')
 b = Coordinate(2,1,d)
 b.is_valid_coor()
-f = b.up(b).y
-h = b.up(b).x
-print([f,h])
+#f = b.up(b).y
+#h = b.up(b).x
+#print([f,h])
 mult = a * result
 print(mult.string)
