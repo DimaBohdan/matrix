@@ -1,4 +1,4 @@
-from functools import cache
+
 def fill_matrix(row_num):
    matrix_list = []
    for num in range(row_num):
