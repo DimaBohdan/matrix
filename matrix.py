@@ -1,5 +1,10 @@
 from functools import cache
-
+def fill_matrix(row_num):
+   matrix_list = []
+   for num in range(row_num):
+      row_list = [float(elem) for elem in input().split(" ")]
+      matrix_list.append(row_list)
+   return matrix_list
 def fill(str):
    a = str.split(']')
    list = []
@@ -33,55 +38,63 @@ class Matrix:
    def multiply_num_matr_fun(self, numer):
       a = [[i*numer for i in k] for k in self.string]
       return a
-   def alg_adjunct(self):
-      rang = self.n
-      matrix = self.string
-      if self.m == rang:
-         match rang:
-            case 1:
-               return matrix[0][0]
-            case rang:
-               list_of_alg_adjunct = 0
-               for i in range(rang):
-                  list_of_matrix = []
-                  for k in range(rang):
-                     matrix_of_the_first_range = []
-                     for j in range(rang):
-                        if k != 0 and j != i:
-                           matrix_of_the_first_range += [matrix[k][j]]
-                     if matrix_of_the_first_range != []:
-                        list_of_matrix += [matrix_of_the_first_range]
-                  minor_of_elem = Matrix(rang - 1, rang - 1, list_of_matrix).determinant()
-                  alg_adjunct = minor_of_elem * (-1) ** i
-                  list_of_alg_adjunct += [alg_adjunct]
-               return list_of_alg_adjunct
 
    def determinant(self):
-      rang = self.n
-      matrix = self.string
-      if self.m == rang:
-         match rang:
-            case 1:
-               return matrix[0][0]
-            case rang:
-               sum_of_determinants = 0
-               for i in range(rang):
-                  list_of_matrix = []
-                  for k in range(rang):
-                     matrix_of_the_first_range = []
-                     for j in range(rang):
-                        if k != 0 and j != i:
-                           matrix_of_the_first_range += [matrix[k][j]]
-                     if matrix_of_the_first_range != []:
-                        list_of_matrix += [matrix_of_the_first_range]
-                  minor_of_elem = Matrix(rang - 1, rang - 1, list_of_matrix).determinant()
-                  alg_adjunct = minor_of_elem * (-1)**i
-                  sum_of_determinants += matrix[0][i] * alg_adjunct
-               return sum_of_determinants
-      else:
-         return 'Cannot find a determinant for a non-square matrix'
+      if self.m != self.n:
+         return "Cannot find a determinant for a non-square matrix"
+
+      if self.m == 1:
+         return self.string[0][0]
+
+      if self.m == 2:
+         return self.string[0][0] * self.string[1][1] - self.string[0][1] * self.string[1][0]
+
+      determinant_sum = 0
+      for i in range(self.m):
+         sub_matrix = []
+         for row in range(1, self.m):
+            sub_row = []
+            for col in range(self.n):
+               if col != i:
+                  sub_row.append(self.string[row][col])
+            sub_matrix.append(sub_row)
+
+         minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
+         determinant_sum += (-1) ** i * self.string[0][i] * minor
+
+      return determinant_sum
+   def cofactor (self):
+      if self.m != self.n:
+         return "Cannot find a cofactor for a non-square matrix"
+      cofactor_matrix = []
+      for i in range(self.m):
+         cofactor_row = []
+         for j in range(self.n):
+            # Create the minor matrix by removing row i and column j
+            sub_matrix = []
+            for row in range(self.m):
+               if row != i:
+                  sub_row = []
+                  for col in range(self.n):
+                     if col != j:
+                        sub_row.append(self.string[row][col])
+                  sub_matrix.append(sub_row)
+
+            # Find the determinant of the minor
+            minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
+
+            # Calculate the cofactor element
+            cofactor_element = (-1) ** (i + j) * minor
+            cofactor_row.append(cofactor_element)
+         cofactor_matrix.append(cofactor_row)
+      return Matrix(self.m, self.n, cofactor_matrix)
    def inverse_matrix(self):
-      pass
+      determinant = self.determinant()
+      if determinant == 0:
+         return "Cannot be inversed, because determinant equals to zero"
+      transponed_cofactor_matrix = Matrix(self.m, self.n, self.cofactor().transpon_fun())
+      inverse = transponed_cofactor_matrix.multiply_num_matr_fun(1/determinant)
+      return Matrix(self.m, self.n, inverse)
    def __pow__(self, n):
       if self.m != self.n:
          return "Cannot raise a non-square matrix to a power"
@@ -189,7 +202,12 @@ class Coordinate:
          self.left(self)
 
 #input as example: [[2,3,1],[3,4,5],[3,7,9]]
-a = Matrix(3,3,fill(input()))
+m = int(input())
+n = int(input())
+
+a = Matrix(m, n, fill_matrix(m))
+print(a.determinant())
+print(a.inverse_matrix())
 print(a.transpon_fun())
 d = a.transpon_matrix_class(a)
 print(a)
@@ -200,7 +218,6 @@ else:
    print('No')
 #print(d)
 #input example: 4
-print(a.alg_adjunct())
 print(d.multiply_num_matr_fun(5))
 e = a.multiply_matrix_class(a,int(input("num: ")))
 print(e.transpon_matrix_class(e).string)
