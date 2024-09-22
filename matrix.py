@@ -212,31 +212,31 @@ class Coordinate:
          self.left(self)
 
 #input as example: [[2,3,1],[3,4,5],[3,7,9]]
-m = int(input())
-n = int(input())
-
-a = Matrix(m, n, fill_matrix(m))
-print(a.determinant())
-print(a.inverse_matrix())
-print(a.transpon_fun())
-d = a.transpon_matrix_class(a)
-print(a)
-print((a**3).string)
-if a==d:
-   print('Ok')
-else:
-   print('No')
+if __name__ == "__main__":
+   m = int(input())
+   n = int(input())
+   a = Matrix(m, n, fill_matrix(m))
+   print(a.determinant())
+   print(a.inverse_matrix())
+   print(a.transpon_fun())
+   d = a.transpon_matrix_class(a)
+   print(a)
+   print((a**3).string)
+   if a==d:
+      print('Ok')
+   else:
+      print('No')
 #print(d)
 #input example: 4
-print(d*5)
-e = a
-print(e.transpon_matrix_class(e).string)
-result = a + d
-print(f' New {result.string}')
-b = Coordinate(2,1,d)
-b.is_valid_coor()
+   print(d*5)
+   e = a
+   print(e.transpon_matrix_class(e).string)
+   result = a + d
+   print(f' New {result.string}')
+   b = Coordinate(2,1,d)
+   b.is_valid_coor()
 #f = b.up(b).y
 #h = b.up(b).x
 #print([f,h])
-mult = a * result
-print(mult.string)
+   mult = a * result
+   print(mult.string)
