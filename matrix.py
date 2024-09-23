@@ -113,9 +113,9 @@ class Matrix:
    def __str__(self):
       return '\n'.join([' '.join(map(str, row)) for row in self.string])
 
-   @classmethod
-   def transpon_matrix_class(cls, self):
-      return cls(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
+
+   def transpon_matrix_class(self):
+      return Matrix(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
 
    def __add__(self, other):
       if self.m == other.m and self.n == other.n:
@@ -140,8 +140,12 @@ class Matrix:
             return Matrix(self.m, other.n, c)
          else:
             return "Can not be multiplied"
-      elif isinstance(other, int):
+      elif isinstance(other, float) or isinstance(other, int):
          return Matrix(self.m, self.n, self.multiply_num_matr_fun(other))
+
+class SquareMatrix(Matrix):
+   def __init__(self, m, string):
+      super().__init__(m, m, string)
 
 
 
@@ -155,12 +159,12 @@ Enter number of columns: 4
 '''
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
-   n = int(input("Enter number of columns: "))
-   a = Matrix(m, n, fill_matrix(m))
+   #n = int(input("Enter number of columns: "))
+   a = SquareMatrix(m, fill_matrix(m))
    print(a.determinant())
    print(a.inverse_matrix())
    print(a.transpon_fun())
-   d = a.transpon_matrix_class(a)
+   d = a.transpon_matrix_class()
    print(a)
    print((a**3).string)
    if a==d:
@@ -171,7 +175,7 @@ if __name__ == "__main__":
 #input example: 4
    print(d*5)
    e = a
-   print(e.transpon_matrix_class(e).string)
+   print(e.transpon_matrix_class().string)
    result = a + d
    print(f' New {result.string}')
 #print([f,h])
