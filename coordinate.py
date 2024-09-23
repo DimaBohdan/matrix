@@ -1,67 +1,88 @@
+from matrix import Matrix
+from matrix import fill_matrix
+
 class Coordinate:
    def __init__(self, x, y, clss):
       self.x = x
       self.y = y
       self.clss = clss
+   def __str__(self):
+      return f"Coordinate: ({self.x}, {self.y}) in Matrix {self.clss.m} * {self.clss.n}"
    def is_valid_coor(self):
       if self.x in range(self.clss.m) and self.y in range(self.clss.n):
          return True
       else:
          return False
 
-   @classmethod
-   def up(cls, self):
+   def up(self):
       if self.is_valid_coor():
-         return cls(self.x, self.y + 1, self.clss)
+         return Coordinate(self.x, self.y + 1, self.clss)
       else:
          return "Error"
 
-   @classmethod
-   def down(cls, self):
+   def down(self):
       if self.is_valid_coor():
-         return cls(self.x, self.y - 1, self.clss)
+         return Coordinate(self.x, self.y - 1, self.clss)
       else:
          return "Error"
 
-   @classmethod
-   def right(cls, self):
+   def right(self):
       if self.is_valid_coor():
-         return cls(self.x + 1, self.y, self.clss)
+         return Coordinate(self.x + 1, self.y, self.clss)
       else:
          return "Error"
 
-   @classmethod
-   def left(cls, self):
+   def left(self):
       if self.is_valid_coor():
-         return cls(self.x - 1, self.y, self.clss)
+         return Coordinate(self.x - 1, self.y, self.clss)
       else:
          return "Error"
 
-   def possibility(self):
+# function opportunity_actions in development
+'''
+   def opportunity_actions(self):
       if self.x == 0:
          if self.y == 0:
-            self.down(self)
-            self.right(self)
+            self.down()
+            self.right()
          elif self.x == self.clss.n:
-            self.down(self)
-            self.left(self)
+            self.down()
+            self.left()
          else:
-            self.down(self)
-            self.right(self)
-            self.left(self)
+            self.down()
+            self.right()
+            self.left()
       if self.x == self.clss.m:
          if self.y == 0:
-            self.up(self)
-            self.right(self)
+            self.up()
+            self.right()
          elif self.x == self.clss.n:
-            self.up(self)
-            self.left(self)
+            self.up()
+            self.left()
          else:
-            self.up(self)
-            self.right(self)
-            self.left(self)
+            self.up()
+            self.right()
+            self.left()
       else:
-         self.up(self)
-         self.down(self)
-         self.right(self)
-         self.left(self)
+         self.up()
+         self.down()
+         self.right()
+         self.left()
+'''
+''' Input as an example:
+Enter x: 2
+Enter y: 3
+Enter number of rows: 4
+Enter number of columns: 4
+2 3 4 1
+8 9 2 6
+2 4 5 9
+8 1 3 2
+'''
+x_coor =int(input('Enter x: '))
+y_coor =int(input('Enter y: '))
+m = int(input('Enter number of rows: '))
+n = int(input('Enter number of columns: '))
+b = Coordinate(x_coor, y_coor, Matrix(m, n, fill_matrix(m)))
+print(b.is_valid_coor())
+print(b.left())

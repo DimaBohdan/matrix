@@ -2,7 +2,7 @@
 def fill_matrix(row_num):
    matrix_list = []
    for num in range(row_num):
-      row_list = [float(elem) for elem in input().split(" ")]
+      row_list = [float(elem) for elem in input('Input row: ').split(" ")]
       matrix_list.append(row_list)
    return matrix_list
 
@@ -145,10 +145,17 @@ class Matrix:
 
 
 
-#input as example: [[2,3,1],[3,4,5],[3,7,9]]
+'''
+Enter number of rows: 4
+Enter number of columns: 4
+2 3 4 1
+8 9 2 6
+2 4 5 9
+8 1 3 2
+'''
 if __name__ == "__main__":
-   m = int(input())
-   n = int(input())
+   m = int(input("Enter number of rows: "))
+   n = int(input("Enter number of columns: "))
    a = Matrix(m, n, fill_matrix(m))
    print(a.determinant())
    print(a.inverse_matrix())
