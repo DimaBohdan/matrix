@@ -31,6 +31,8 @@ class Matrix:
       self.raw_matrix = raw_matrix
       self.range_rows_number = range(self.rows_number)
       self.range_columns_number = range(self.columns_number)
+      self.determinant_decomposition = self.adjunct(self.rows_number, 0)
+
    def sub_matrix(self, row, column):
       sub_matrix = deepcopy(self.raw_matrix)
       sub_matrix.remove(self.raw_matrix[row])
@@ -50,6 +52,10 @@ class Matrix:
       minor = self.sub_matrix(row, column).determinant()
       return minor
 
+   def adjunct(self, row, column):
+      adjunct = (-1) ** (row + column) * self.minor(row, column)
+      return adjunct
+
    def determinant(self):
       if self.rows_number != self.columns_number:
          return "Cannot find a determinant for a non-square matrix"
@@ -62,30 +68,17 @@ class Matrix:
 
       determinant = 0
       for row in self.range_rows_number:
-         minor = self.sub_matrix(row, 0).determinant()
-         determinant += (-1) ** row * self.raw_matrix[row][0] * minor
+         determinant += self.determinant_decomposition * self.raw_matrix[row][0]
       return determinant
 
    def cofactor (self):
       if self.rows_number != self.columns_number:
          return "Cannot find a cofactor for a non-square matrix"
       cofactor_matrix = []
-      for i in range(self.rows_number):
-         cofactor_row = []
-         for j in range(self.columns_number):
-            sub_matrix = []
-            for row in range(self.rows_number):
-               if row != i:
-                  sub_row = []
-                  for col in range(self.columns_number):
-                     if col != j:
-                        sub_row.append(self.raw_matrix[row][col])
-                  sub_matrix.append(sub_row)
-            minor = Matrix(self.rows_number - 1, self.columns_number - 1, sub_matrix).determinant()
-            cofactor_element = (-1) ** (i + j) * minor
-            cofactor_row.append(cofactor_element)
+      for row in self.range_rows_number:
+         cofactor_row = [self.adjunct(row, column) for column in self.range_columns_number]
          cofactor_matrix.append(cofactor_row)
-      return Matrix(self.rows_number, self.columns_number, cofactor_matrix)
+      return Matrix(cofactor_matrix)
 
    def inverse_matrix(self):
       determinant = self.determinant()
