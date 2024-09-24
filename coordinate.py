@@ -7,9 +7,9 @@ class Coordinate:
       self.y = y
       self.clss = clss
    def __str__(self):
-      return f"Coordinate: ({self.x}, {self.y}) in Matrix {self.clss.m} * {self.clss.n}"
+      return f"Coordinate: ({self.x}, {self.y}) in Matrix {self.clss.rows_number} * {self.clss.columns_number}"
    def is_valid_coor(self):
-      if self.x in range(self.clss.m) and self.y in range(self.clss.n):
+      if self.x in range(self.clss.rows_number) and self.y in range(self.clss.columns_number):
          return True
       else:
          return False
@@ -45,18 +45,18 @@ class Coordinate:
          if self.y == 0:
             self.down()
             self.right()
-         elif self.x == self.clss.n:
+         elif self.x == self.clss.columns_number:
             self.down()
             self.left()
          else:
             self.down()
             self.right()
             self.left()
-      if self.x == self.clss.m:
+      if self.x == self.clss.rows_number:
          if self.y == 0:
             self.up()
             self.right()
-         elif self.x == self.clss.n:
+         elif self.x == self.clss.columns_number:
             self.up()
             self.left()
          else:
