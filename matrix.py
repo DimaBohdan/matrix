@@ -1,4 +1,4 @@
-
+from copy import deepcopy
 def fill_matrix(row_num):
    matrix_list = []
    for num in range(row_num):
@@ -25,12 +25,18 @@ def fill(str):
    return new
 
 class Matrix:
-   def __init__(self, raw_matrix):
+   def __init__(self, raw_matrix: list[list[float]]):
       self.rows_number = len(raw_matrix)
       self.columns_number = len(raw_matrix[0])
       self.raw_matrix = raw_matrix
       self.range_rows_number = range(self.rows_number)
       self.range_columns_number = range(self.columns_number)
+   def sub_matrix(self, row, column):
+      sub_matrix = deepcopy(self.raw_matrix)
+      sub_matrix.remove(self.raw_matrix[row])
+      for i in range(self.rows_number - 1):
+         sub_matrix[i].pop(column)
+      return Matrix(sub_matrix)
 
    def transpose(self):
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
@@ -39,6 +45,10 @@ class Matrix:
    def multiply_scalar(self, scalar):
       multiply_scalar = [[i * scalar for i in k] for k in self.raw_matrix]
       return multiply_scalar
+
+   def minor(self, row, column):
+      minor = self.sub_matrix(row, column).determinant()
+      return minor
 
    def determinant(self):
       if self.rows_number != self.columns_number:
@@ -50,19 +60,11 @@ class Matrix:
       if self.rows_number == 2:
          return self.raw_matrix[0][0] * self.raw_matrix[1][1] - self.raw_matrix[0][1] * self.raw_matrix[1][0]
 
-      determinant_sum = 0
-      for i in range(self.rows_number):
-         sub_matrix = []
-         for row in range(1, self.rows_number):
-            sub_row = []
-            for col in range(self.columns_number):
-               if col != i:
-                  sub_row.append(self.raw_matrix[row][col])
-            sub_matrix.append(sub_row)
-
-         minor = Matrix(self.rows_number - 1, self.columns_number - 1, sub_matrix).determinant()
-         determinant_sum += (-1) ** i * self.raw_matrix[0][i] * minor
-      return determinant_sum
+      determinant = 0
+      for row in self.range_rows_number:
+         minor = self.sub_matrix(row, 0).determinant()
+         determinant += (-1) ** row * self.raw_matrix[row][0] * minor
+      return determinant
 
    def cofactor (self):
       if self.rows_number != self.columns_number:
@@ -139,8 +141,8 @@ class Matrix:
          return Matrix(self.rows_number, self.columns_number, self.multiply_scalar(other))
 
 class SquareMatrix(Matrix):
-   def __init__(self, m, raw_matrix):
-      super().__init__(m, m, raw_matrix)
+   def __init__(self, raw_matrix):
+      super().__init__(raw_matrix)
 
 
 
@@ -155,7 +157,7 @@ Enter number of columns: 4
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
-   a = SquareMatrix(m, fill_matrix(m))
+   a = SquareMatrix(fill_matrix(m))
    print(a.determinant())
    print(a.inverse_matrix())
    print(a.transpose())
