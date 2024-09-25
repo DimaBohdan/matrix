@@ -25,78 +25,83 @@ def fill(str):
    return new
 
 class Matrix:
-   def __init__(self, raw_matrix):
-      self.rows_number = len(raw_matrix)
-      self.columns_number = len(raw_matrix[0])
-      self.raw_matrix = raw_matrix
-      self.range_rows_number = range(self.rows_number)
-      self.range_columns_number = range(self.columns_number)
+   def __init__(self, m, n, string):
+      self.m = m
+      self.n = n
+      self.string = string
 
-   def transpose(self):
-      transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
-      return transpose
+   def __del__(self):
+      del self
 
-   def multiply_scalar(self, scalar):
-      multiply_scalar = [[i * scalar for i in k] for k in self.raw_matrix]
-      return multiply_scalar
+   def view(self):
+       for i in self.string:
+          print(i)
+
+   def transpon_fun(self):
+      a = [[i[k] for i in self.string] for k in range(self.n)]
+      return a
+
+   def multiply_num_matr_fun(self, numer):
+      a = [[i*numer for i in k] for k in self.string]
+      return a
 
    def determinant(self):
-      if self.rows_number != self.columns_number:
+      if self.m != self.n:
          return "Cannot find a determinant for a non-square matrix"
 
-      if self.rows_number == 1:
-         return self.raw_matrix[0][0]
+      if self.m == 1:
+         return self.string[0][0]
 
-      if self.rows_number == 2:
-         return self.raw_matrix[0][0] * self.raw_matrix[1][1] - self.raw_matrix[0][1] * self.raw_matrix[1][0]
+      if self.m == 2:
+         return self.string[0][0] * self.string[1][1] - self.string[0][1] * self.string[1][0]
 
       determinant_sum = 0
-      for i in range(self.rows_number):
+      for i in range(self.m):
          sub_matrix = []
-         for row in range(1, self.rows_number):
+         for row in range(1, self.m):
             sub_row = []
-            for col in range(self.columns_number):
+            for col in range(self.n):
                if col != i:
-                  sub_row.append(self.raw_matrix[row][col])
+                  sub_row.append(self.string[row][col])
             sub_matrix.append(sub_row)
 
-         minor = Matrix(self.rows_number - 1, self.columns_number - 1, sub_matrix).determinant()
-         determinant_sum += (-1) ** i * self.raw_matrix[0][i] * minor
+         minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
+         determinant_sum += (-1) ** i * self.string[0][i] * minor
       return determinant_sum
 
    def cofactor (self):
-      if self.rows_number != self.columns_number:
+      if self.m != self.n:
          return "Cannot find a cofactor for a non-square matrix"
       cofactor_matrix = []
-      for i in range(self.rows_number):
+      for i in range(self.m):
          cofactor_row = []
-         for j in range(self.columns_number):
+         for j in range(self.n):
             sub_matrix = []
-            for row in range(self.rows_number):
+            for row in range(self.m):
                if row != i:
                   sub_row = []
-                  for col in range(self.columns_number):
+                  for col in range(self.n):
                      if col != j:
-                        sub_row.append(self.raw_matrix[row][col])
+                        sub_row.append(self.string[row][col])
                   sub_matrix.append(sub_row)
-            minor = Matrix(self.rows_number - 1, self.columns_number - 1, sub_matrix).determinant()
+            minor = Matrix(self.m - 1, self.n - 1, sub_matrix).determinant()
             cofactor_element = (-1) ** (i + j) * minor
             cofactor_row.append(cofactor_element)
          cofactor_matrix.append(cofactor_row)
-      return Matrix(self.rows_number, self.columns_number, cofactor_matrix)
+      return Matrix(self.m, self.n, cofactor_matrix)
 
    def inverse_matrix(self):
       determinant = self.determinant()
       if determinant == 0:
          return "Cannot be inversed, because determinant equals to zero"
-      transponed_cofactor_matrix = Matrix(self.rows_number, self.columns_number, self.cofactor().transpose())
-      inverse = transponed_cofactor_matrix.multiply_scalar(1 / determinant)
-      return Matrix(self.rows_number, self.columns_number, inverse)
+      transponed_cofactor_matrix = Matrix(self.m, self.n, self.cofactor().transpon_fun())
+      inverse = transponed_cofactor_matrix.multiply_num_matr_fun(1/determinant)
+      return Matrix(self.m, self.n, inverse)
    def __pow__(self, n):
-      if self.rows_number != self.columns_number:
+      if self.m != self.n:
          return "Cannot raise a non-square matrix to a power"
       # Initialize the result as the identity matrix
-      result = Matrix(self.rows_number, self.columns_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
+      result = Matrix(self.m, self.n, [[1 if i == j else 0 for j in range(self.n)] for i in range(self.m)])
       base = self
       while n > 0:
          if n % 2 == 1:
@@ -106,41 +111,41 @@ class Matrix:
       return result
 
    def __str__(self):
-      return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
+      return '\n'.join([' '.join(map(str, row)) for row in self.string])
 
 
    def transpon_matrix_class(self):
-      return Matrix(len(self.transpose()), len(self.transpose()[0]), self.transpose())
+      return Matrix(len(self.transpon_fun()), len(self.transpon_fun()[0]), self.transpon_fun())
 
    def __add__(self, other):
-      if self.rows_number == other.rows_number and self.columns_number == other.columns_number:
-         for k in self.raw_matrix:
+      if self.m == other.m and self.n == other.n:
+         for k in self.string:
             for i in k:
-               var = [[i + n for n in m] for m in other.raw_matrix]
-         return Matrix(self.rows_number, self.columns_number, var)
+               var = [[i + n for n in m] for m in other.string]
+         return Matrix(self.m, self.n, var)
 
    def __eq__(self, other):
-      if self.raw_matrix == other.raw_matrix:
+      if self.string == other.string:
          return True
       else:
          return False
 
    def __mul__(self,other):
       if isinstance(other, Matrix):
-         if self.columns_number == other.rows_number:
-            c = [[None for __ in range(other.columns_number)] for __ in range(self.rows_number)]
-            for i in range(self.rows_number):
-               for j in range(other.columns_number):
-                  c[i][j] = sum(self.raw_matrix[i][k] * other.raw_matrix[k][j] for k in range(other.rows_number))
-            return Matrix(self.rows_number, other.columns_number, c)
+         if self.n == other.m:
+            c = [[None for __ in range(other.n)] for __ in range(self.m)]
+            for i in range(self.m):
+               for j in range(other.n):
+                  c[i][j] = sum(self.string[i][k] * other.string[k][j] for k in range(other.m))
+            return Matrix(self.m, other.n, c)
          else:
             return "Can not be multiplied"
       elif isinstance(other, float) or isinstance(other, int):
-         return Matrix(self.rows_number, self.columns_number, self.multiply_scalar(other))
+         return Matrix(self.m, self.n, self.multiply_num_matr_fun(other))
 
 class SquareMatrix(Matrix):
-   def __init__(self, m, raw_matrix):
-      super().__init__(m, m, raw_matrix)
+   def __init__(self, m, string):
+      super().__init__(m, m, string)
 
 
 
@@ -154,14 +159,14 @@ Enter number of columns: 4
 '''
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
-   #columns_number = int(input("Enter number of columns: "))
+   #n = int(input("Enter number of columns: "))
    a = SquareMatrix(m, fill_matrix(m))
    print(a.determinant())
    print(a.inverse_matrix())
-   print(a.transpose())
+   print(a.transpon_fun())
    d = a.transpon_matrix_class()
    print(a)
-   print((a**3).raw_matrix)
+   print((a**3).string)
    if a==d:
       print('Ok')
    else:
@@ -170,9 +175,9 @@ if __name__ == "__main__":
 #input example: 4
    print(d*5)
    e = a
-   print(e.transpon_matrix_class().raw_matrix)
+   print(e.transpon_matrix_class().string)
    result = a + d
-   print(f' New {result.raw_matrix}')
+   print(f' New {result.string}')
 #print([f,h])
    mult = a * result
-   print(mult.raw_matrix)
+   print(mult.string)
