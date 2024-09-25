@@ -26,11 +26,15 @@ def fill(str):
 
 class Matrix:
    def __init__(self, raw_matrix: list[list[float]]):
+      self.origin = self
       self.rows_number = len(raw_matrix)
       self.columns_number = len(raw_matrix[0])
       self.raw_matrix = raw_matrix
       self.range_rows_number = range(self.rows_number)
       self.range_columns_number = range(self.columns_number)
+      self.is_square = (self.rows_number == self.columns_number)
+      self.is_row_vector = (self.rows_number == 1)
+      self.is_column_vector = (self.columns_number == 1)
 
    def sub_matrix(self, row, column):
       sub_matrix = deepcopy(self.raw_matrix)
@@ -61,7 +65,10 @@ class Matrix:
             return "Can not be multiplied"
 
    def minor(self, row, column):
-      minor = self.sub_matrix(row, column).determinant()
+      if self.rows_number == 1 and self.columns_number == 1:
+         minor =self.determinant()
+      else:
+         minor = self.sub_matrix(row, column).determinant()
       return minor
 
    def adjunct(self, row, column):
@@ -98,18 +105,18 @@ class Matrix:
          return "Cannot be inversed, because determinant equals to zero"
       transposed_cofactor_matrix = self.cofactor().transpose()
       inverse = transposed_cofactor_matrix * (1 / determinant)
-      return Matrix(inverse)
+      return inverse
    def __pow__(self, n):
-      if self.rows_number != self.columns_number or n<=0:
+      if self.rows_number != self.columns_number or n <= 0:
          return "Cannot raise a non-square matrix to a power"
       # Initialize the result as the identity matrix
-      power  = Matrix(self.rows_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
+      power  = IdentityMatrix(self.rows_number, self.rows_number)
       while n > 0:
          if n % 2 == 1:
-            result = result * self
-         self = base * base
+            power = power * self.origin
+         self.origin *= self.origin
          n //= 2
-      return result
+      return power
 
    def __str__(self):
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
@@ -138,6 +145,17 @@ class SquareMatrix(Matrix):
    def __init__(self, raw_matrix):
       super().__init__(raw_matrix)
 
+class IdentityMatrix(Matrix):
+   def __init__(self, rows_number, columns_number):
+      raw_matrix = []
+      self.rows_number = rows_number
+      self.columns_number = columns_number
+      self.range_rows_number = range(self.rows_number)
+      self.range_columns_number = range(self.columns_number)
+      for row in self.range_rows_number:
+         row = [1 if row == column else 0 for column in self.range_columns_number]
+         raw_matrix.append(row)
+      super().__init__(raw_matrix)
 
 
 '''
@@ -155,7 +173,7 @@ if __name__ == "__main__":
    print(a.determinant())
    print(a.inverse_matrix())
    print(a.transpose())
-   d = a.transpon_matrix_class()
+   d = a.transpose()
    print(a)
    print((a**3).raw_matrix)
    if a==d:
@@ -166,7 +184,7 @@ if __name__ == "__main__":
 #input example: 4
    print(d*5)
    e = a
-   print(e.transpon_matrix_class().raw_matrix)
+   print(e.transpose().raw_matrix)
    result = a + d
    print(f' New {result.raw_matrix}')
 #print([f,h])
