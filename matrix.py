@@ -103,7 +103,7 @@ class Matrix:
       if self.rows_number != self.columns_number or n<=0:
          return "Cannot raise a non-square matrix to a power"
       # Initialize the result as the identity matrix
-      power = Matrix(self.rows_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
+      power  = Matrix(self.rows_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
       while n > 0:
          if n % 2 == 1:
             result = result * self
