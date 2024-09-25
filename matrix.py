@@ -31,7 +31,6 @@ class Matrix:
       self.raw_matrix = raw_matrix
       self.range_rows_number = range(self.rows_number)
       self.range_columns_number = range(self.columns_number)
-      self.determinant_decomposition = self.adjunct(self.rows_number, 0)
 
    def sub_matrix(self, row, column):
       sub_matrix = deepcopy(self.raw_matrix)
@@ -42,11 +41,24 @@ class Matrix:
 
    def transpose(self):
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
-      return transpose
+      return Matrix(transpose)
 
    def multiply_scalar(self, scalar):
       multiply_scalar = [[i * scalar for i in k] for k in self.raw_matrix]
-      return multiply_scalar
+      return Matrix(multiply_scalar)
+
+   def multiply_matrix(self, other):
+      if self.columns_number == other.rows_number:
+         multiply_matrix = []
+         for row in range(self.rows_number):
+            multiply_row = []
+            for column in range(other.columns_number):
+               multiply_elem = sum(self.raw_matrix[row][k] * other.raw_matrix[k][column] for k in range(other.rows_number))
+               multiply_row.append(multiply_elem)
+            multiply_matrix.append(multiply_row)
+         return Matrix(multiply_matrix)
+      else:
+            return "Can not be multiplied"
 
    def minor(self, row, column):
       minor = self.sub_matrix(row, column).determinant()
@@ -68,7 +80,7 @@ class Matrix:
 
       determinant = 0
       for row in self.range_rows_number:
-         determinant += self.determinant_decomposition * self.raw_matrix[row][0]
+         determinant += self.adjunct(row, 0) * self.raw_matrix[row][0]
       return determinant
 
    def cofactor (self):
@@ -84,35 +96,31 @@ class Matrix:
       determinant = self.determinant()
       if determinant == 0:
          return "Cannot be inversed, because determinant equals to zero"
-      transponed_cofactor_matrix = Matrix(self.rows_number, self.columns_number, self.cofactor().transpose())
-      inverse = transponed_cofactor_matrix.multiply_scalar(1 / determinant)
-      return Matrix(self.rows_number, self.columns_number, inverse)
+      transposed_cofactor_matrix = self.cofactor().transpose()
+      inverse = transposed_cofactor_matrix * (1 / determinant)
+      return Matrix(inverse)
    def __pow__(self, n):
-      if self.rows_number != self.columns_number:
+      if self.rows_number != self.columns_number or n<=0:
          return "Cannot raise a non-square matrix to a power"
       # Initialize the result as the identity matrix
-      result = Matrix(self.rows_number, self.columns_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
-      base = self
+      power = Matrix(self.rows_number, [[1 if i == j else 0 for j in range(self.columns_number)] for i in range(self.rows_number)])
       while n > 0:
          if n % 2 == 1:
-            result = result * base
-         base = base * base
+            result = result * self
+         self = base * base
          n //= 2
       return result
 
    def __str__(self):
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
 
-
-   def transpon_matrix_class(self):
-      return Matrix(len(self.transpose()), len(self.transpose()[0]), self.transpose())
-
    def __add__(self, other):
       if self.rows_number == other.rows_number and self.columns_number == other.columns_number:
+         var = []
          for k in self.raw_matrix:
             for i in k:
                var = [[i + n for n in m] for m in other.raw_matrix]
-         return Matrix(self.rows_number, self.columns_number, var)
+         return Matrix(var)
 
    def __eq__(self, other):
       if self.raw_matrix == other.raw_matrix:
@@ -122,16 +130,9 @@ class Matrix:
 
    def __mul__(self,other):
       if isinstance(other, Matrix):
-         if self.columns_number == other.rows_number:
-            c = [[None for __ in range(other.columns_number)] for __ in range(self.rows_number)]
-            for i in range(self.rows_number):
-               for j in range(other.columns_number):
-                  c[i][j] = sum(self.raw_matrix[i][k] * other.raw_matrix[k][j] for k in range(other.rows_number))
-            return Matrix(self.rows_number, other.columns_number, c)
-         else:
-            return "Can not be multiplied"
+         return self.multiply_matrix(other)
       elif isinstance(other, float) or isinstance(other, int):
-         return Matrix(self.rows_number, self.columns_number, self.multiply_scalar(other))
+         return self.multiply_scalar(other)
 
 class SquareMatrix(Matrix):
    def __init__(self, raw_matrix):
