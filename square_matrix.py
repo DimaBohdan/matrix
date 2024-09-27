@@ -1,5 +1,13 @@
 from matrix import *
 class SquareMatrix(Matrix):
+
+    def sub_matrix(self, row, column):
+        sub_matrix = deepcopy(self.raw_matrix)
+        sub_matrix.remove(self.raw_matrix[row])
+        for i in range(self.rows_number - 1):
+            sub_matrix[i].pop(column)
+        return SquareMatrix(sub_matrix)
+
     def minor(self, row, column):
         if self.rows_number == 1 and self.columns_number == 1:
             minor = self.determinant()

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from square_matrix import *
 def fill_matrix(row_num):
    matrix_list = []
    for num in range(row_num):
@@ -36,12 +37,6 @@ class Matrix:
       self.is_row_vector = (self.rows_number == 1)
       self.is_column_vector = (self.columns_number == 1)
 
-   def sub_matrix(self, row, column):
-      sub_matrix = deepcopy(self.raw_matrix)
-      sub_matrix.remove(self.raw_matrix[row])
-      for i in range(self.rows_number - 1):
-         sub_matrix[i].pop(column)
-      return Matrix(sub_matrix)
 
    def transpose(self):
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
