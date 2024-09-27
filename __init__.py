@@ -1,1 +1,4 @@
-__all__ = ["matrix", "equations", "square_matrix"]
+__all__ = ['matrix', 'square_matrix']
+
+from .matrix import *
+from .square_matrix import *

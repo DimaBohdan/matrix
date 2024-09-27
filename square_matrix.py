@@ -1,4 +1,4 @@
-
+from matrix import *
 class SquareMatrix(Matrix):
     def minor(self, row, column):
         if self.rows_number == 1 and self.columns_number == 1:
