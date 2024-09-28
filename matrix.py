@@ -1,8 +1,11 @@
-from copy import deepcopy
-from square_matrix import *
+from __future__ import annotations
+from typing import Union
+import input_handler
+from square_matrix import SquareMatrix
+
 
 class Matrix:
-   def __init__(self, raw_matrix: list[list[float]]):
+   def __init__(self, raw_matrix: Union[list[list[float]], list[list[int]]]):
       self.origin = self
       self.rows_number = len(raw_matrix)
       self.columns_number = len(raw_matrix[0])
@@ -18,11 +21,11 @@ class Matrix:
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
       return Matrix(transpose)
 
-   def multiply_scalar(self, scalar):
+   def multiply_scalar(self, scalar: [int, float]):
       multiply_scalar = [[i * scalar for i in k] for k in self.raw_matrix]
       return Matrix(multiply_scalar)
 
-   def multiply_matrix(self, other):
+   def multiply_matrix(self, other: Matrix):
       if self.columns_number == other.rows_number:
          multiply_matrix = []
          for row in range(self.rows_number):
@@ -38,7 +41,7 @@ class Matrix:
    def __str__(self):
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
 
-   def __add__(self, other):
+   def __add__(self, other: Matrix):
       if self.rows_number == other.rows_number and self.columns_number == other.columns_number:
          var = []
          for k in self.raw_matrix:
@@ -46,16 +49,16 @@ class Matrix:
                var = [[i + n for n in m] for m in other.raw_matrix]
          return Matrix(var)
 
-   def __eq__(self, other):
+   def __eq__(self, other: Matrix):
       if self.raw_matrix == other.raw_matrix:
          return True
       else:
          return False
 
-   def __mul__(self,other):
+   def __mul__(self, other: Union[int, float, Matrix]):
       if isinstance(other, Matrix):
          return self.multiply_matrix(other)
-      elif isinstance(other, float) or isinstance(other, int):
+      elif isinstance(other, (float, int)):
          return self.multiply_scalar(other)
 
 class IdentityMatrix(Matrix):
@@ -82,7 +85,7 @@ Enter number of columns: 4
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
-   a = SquareMatrix(fill_matrix(m))
+   a = SquareMatrix(input_handler.space_separated_row_by_row(m))
    print(a.determinant())
    print(a.inverse_matrix())
    print(a.transpose())

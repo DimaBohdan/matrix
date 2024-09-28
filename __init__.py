@@ -1,4 +1,2 @@
-__all__ = ['matrix', 'square_matrix']
+__all__ = ['matrix', 'square_matrix', 'equations', 'input_handler']
 
-from .matrix import *
-from .square_matrix import *

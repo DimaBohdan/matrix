@@ -1,21 +1,24 @@
-from matrix import *
-class SquareMatrix(Matrix):
+from copy import deepcopy
+from matrix import Matrix, IdentityMatrix
 
-    def sub_matrix(self, row, column):
+class SquareMatrix(Matrix):
+    def __init__(self, raw_matrix):
+        super().__init__(raw_matrix)
+    def sub_matrix(self, row: int, column: int):
         sub_matrix = deepcopy(self.raw_matrix)
         sub_matrix.remove(self.raw_matrix[row])
         for i in range(self.rows_number - 1):
             sub_matrix[i].pop(column)
         return SquareMatrix(sub_matrix)
 
-    def minor(self, row, column):
+    def minor(self, row: int, column: int):
         if self.rows_number == 1 and self.columns_number == 1:
             minor = self.determinant()
         else:
             minor = self.sub_matrix(row, column).determinant()
         return minor
 
-    def adjunct(self, row, column):
+    def adjunct(self, row: int, column: int):
         adjunct = (-1) ** (row + column) * self.minor(row, column)
         return adjunct
 
@@ -49,7 +52,7 @@ class SquareMatrix(Matrix):
         inverse = transposed_cofactor_matrix * (1 / determinant)
         return inverse
 
-    def __pow__(self, n):
+    def __pow__(self, n: int):
         if n <= 0:
             return "Cannot raise a non-square matrix to a power"
         # Initialize the result as the identity matrix
