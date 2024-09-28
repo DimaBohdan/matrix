@@ -22,3 +22,5 @@ def fill(str):
    for k in new_lis:
       new.append([int(i) for i in k])
    return new
+   
+print(fill('[[1,2,4],[1,2,5],[3,5,8]]'
