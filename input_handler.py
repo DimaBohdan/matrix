@@ -23,4 +23,4 @@ def fill(str):
       new.append([int(i) for i in k])
    return new
    
-print(fill('[[1,2,4],[1,2,5],[3,5,8]]'
+print(fill('[[1,2,4],[1,2,5],[3,5,8]]'))

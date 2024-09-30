@@ -1,11 +1,12 @@
 from __future__ import annotations
 from typing import Union
 import input_handler
-from square_matrix import SquareMatrix
+from copy import deepcopy
 
+raw_matrix_type = Union[list[list[float]], list[list[int]]]
 
 class Matrix:
-   def __init__(self, raw_matrix: Union[list[list[float]], list[list[int]]]):
+   def __init__(self, raw_matrix: raw_matrix_type):
       self.origin = self
       self.rows_number = len(raw_matrix)
       self.columns_number = len(raw_matrix[0])
@@ -17,49 +18,56 @@ class Matrix:
       self.is_column_vector = (self.columns_number == 1)
 
 
-   def transpose(self):
+   def transpose(self) -> matrices_types:
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
       return Matrix(transpose)
 
-   def multiply_scalar(self, scalar: [int, float]):
-      multiply_scalar = [[i * scalar for i in k] for k in self.raw_matrix]
-      return Matrix(multiply_scalar)
-
-   def multiply_matrix(self, other: Matrix):
-      if self.columns_number == other.rows_number:
-         multiply_matrix = []
-         for row in range(self.rows_number):
-            multiply_row = []
-            for column in range(other.columns_number):
-               multiply_elem = sum(self.raw_matrix[row][k] * other.raw_matrix[k][column] for k in range(other.rows_number))
-               multiply_row.append(multiply_elem)
-            multiply_matrix.append(multiply_row)
-         return Matrix(multiply_matrix)
-      else:
-            return "Can not be multiplied"
-
-   def __str__(self):
+   def __str__(self) -> str:
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
 
-   def __add__(self, other: Matrix):
-      if self.rows_number == other.rows_number and self.columns_number == other.columns_number:
-         var = []
-         for k in self.raw_matrix:
-            for i in k:
-               var = [[i + n for n in m] for m in other.raw_matrix]
-         return Matrix(var)
+class SquareMatrix(Matrix):
+   def __init__(self, raw_matrix):
+      super().__init__(raw_matrix)
 
-   def __eq__(self, other: Matrix):
-      if self.raw_matrix == other.raw_matrix:
-         return True
+   def sub_matrix(self, row: int, column: int) -> SquareMatrix:
+      sub_matrix = deepcopy(self.raw_matrix)
+      sub_matrix.remove(self.raw_matrix[row])
+      for i in range(self.rows_number - 1):
+         sub_matrix[i].pop(column)
+      return SquareMatrix(sub_matrix)
+
+   def minor(self, row: int, column: int) -> Union[int, float]:
+      if self.rows_number == 1 and self.columns_number == 1:
+         minor = self.determinant()
       else:
-         return False
+         minor = self.sub_matrix(row, column).determinant()
+      return minor
 
-   def __mul__(self, other: Union[int, float, Matrix]):
-      if isinstance(other, Matrix):
-         return self.multiply_matrix(other)
-      elif isinstance(other, (float, int)):
-         return self.multiply_scalar(other)
+   def adjunct(self, row: int, column: int) -> Union[int, float]:
+      adjunct = (-1) ** (row + column) * self.minor(row, column)
+      return adjunct
+
+   def determinant(self) -> Union[int, float]:
+      if self.rows_number == 1:
+         return self.raw_matrix[0][0]
+
+      if self.rows_number == 2:
+         return self.raw_matrix[0][0] * self.raw_matrix[1][1] - self.raw_matrix[0][1] * self.raw_matrix[1][0]
+
+      determinant = 0
+      for row in self.range_rows_number:
+         determinant += self.adjunct(row, 0) * self.raw_matrix[row][0]
+      return determinant
+
+   def cofactor(self) -> SquareMatrix:
+      if self.rows_number != self.columns_number:
+         raise Exception("Cannot find a cofactor for a non-square matrix")
+      cofactor_matrix = []
+      for row in self.range_rows_number:
+         cofactor_row = [self.adjunct(row, column) for column in self.range_columns_number]
+         cofactor_matrix.append(cofactor_row)
+      return SquareMatrix(cofactor_matrix)
+
 
 class IdentityMatrix(Matrix):
    def __init__(self, rows_number, columns_number):
@@ -72,6 +80,7 @@ class IdentityMatrix(Matrix):
          row = [1 if row == column else 0 for column in self.range_columns_number]
          raw_matrix.append(row)
       super().__init__(raw_matrix)
+matrices_types = Union[Matrix, SquareMatrix]
 
 
 '''
@@ -85,13 +94,13 @@ Enter number of columns: 4
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
-   a = SquareMatrix(input_handler.space_separated_row_by_row(m))
-   print(a.determinant())
-   print(a.inverse_matrix())
+   a = Matrix(input_handler.space_separated_row_by_row(m))
+   #print(a.determinant())
+   #print(a.inverse_matrix())
    print(a.transpose())
    d = a.transpose()
    print(a)
-   print((a**3).raw_matrix)
+   #print((a**3).raw_matrix)
    if a==d:
       print('Ok')
    else:
