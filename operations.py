@@ -21,23 +21,31 @@ def multiply_matrix(this: matrices_types, other: matrices_types) -> matrices_typ
                     this.raw_matrix[row][k] * other.raw_matrix[k][column] for k in range(other.rows_number))
                 multiply_row.append(multiply_elem)
             multiply.append(multiply_row)
-        return Matrix(multiply)
+        result = (SquareMatrix(multiply) if square_checker(multiply) else Matrix(multiply))
+        return result
     else:
         raise Exception("Can not be multiplied")
 
 def __add__(this: matrices_types, other: matrices_types) -> matrices_types:
     if this.rows_number == other.rows_number and this.columns_number == other.columns_number:
-        var = []
+        sum_raw_matrix = []
         for k in this.raw_matrix:
             for i in k:
-               var = [[i + n for n in m] for m in other.raw_matrix]
-        return Matrix(var)
+               sum_raw_matrix = [[i + n for n in m] for m in other.raw_matrix]
+        result = (SquareMatrix(sum_raw_matrix) if square_checker(sum_raw_matrix) else Matrix(sum_raw_matrix))
+        return result
 
 def __eq__(this: matrices_types, other: matrices_types) -> bool:
     if this.raw_matrix == other.raw_matrix:
         return True
     else:
         return False
+
+def __mul__(this: matrices_types, other: Union[matrices_types, int, float]) -> matrices_types:
+    if isinstance(other, Matrix):
+        return multiply_matrix(this, other)
+    elif isinstance(other, (float, int)):
+        return multiply_scalar(this, other)
 
 def __pow__(square_matrix: SquareMatrix, power: int) -> SquareMatrix:
     if power <= 0:
@@ -49,7 +57,8 @@ def __pow__(square_matrix: SquareMatrix, power: int) -> SquareMatrix:
             power = power * square_matrix.origin
         square_matrix.origin *= square_matrix.origin
         power //= 2
-    return power
+    return SquareMatrix(power.raw_matrix)
+
 def inverse_matrix(square_matrix: SquareMatrix) -> SquareMatrix:
     determinant = square_matrix.determinant()
     if determinant == 0:
