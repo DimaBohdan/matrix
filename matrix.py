@@ -105,7 +105,7 @@ if __name__ == "__main__":
    #else:
     #  print('No')
 #print(d)
-#input example: 4
+#input example: 3
    #print(d*5)
    #e = a
    #print(e.transpose().raw_matrix)

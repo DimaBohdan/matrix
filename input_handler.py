@@ -15,6 +15,6 @@ def space_separated(text: str) -> list:
       matrix_list.append([float(elem) for elem in row.split(" ")])
    return matrix_list
 
-print(space_separated("""4 5 1
+print(space_separated("""3 5 1
 8 7 2
 4 3 2"""))
