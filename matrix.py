@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Union
-import input_handler
 from copy import deepcopy
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
@@ -94,24 +93,24 @@ Enter number of columns: 4
 if __name__ == "__main__":
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
-   a = Matrix(input_handler.space_separated_row_by_row(m))
+   #a = Matrix(input_handler.space_separated_row_by_row(m))
    #print(a.determinant())
    #print(a.inverse_matrix())
-   print(a.transpose())
-   d = a.transpose()
-   print(a)
+   #print(a.transpose())
+   #d = a.transpose()
+   #print(a)
    #print((a**3).raw_matrix)
-   if a==d:
-      print('Ok')
-   else:
-      print('No')
+   #if a==d:
+     # print('Ok')
+   #else:
+    #  print('No')
 #print(d)
 #input example: 4
-   print(d*5)
-   e = a
-   print(e.transpose().raw_matrix)
-   result = a + d
-   print(f' New {result.raw_matrix}')
+   #print(d*5)
+   #e = a
+   #print(e.transpose().raw_matrix)
+   #result = a + d
+   #print(f' New {result.raw_matrix}')
 #print([f,h])
-   mult = a * result
-   print(mult.raw_matrix)
+   #mult = a * result
+   #print(mult.raw_matrix)
