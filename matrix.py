@@ -79,6 +79,7 @@ class IdentityMatrix(Matrix):
          row = [1 if row == column else 0 for column in self.range_columns_number]
          raw_matrix.append(row)
       super().__init__(raw_matrix)
+
 matrices_types = Union[Matrix, SquareMatrix]
 
 

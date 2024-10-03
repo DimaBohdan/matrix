@@ -1,14 +1,14 @@
 from matrix import Matrix, SquareMatrix, IdentityMatrix, raw_matrix_type, matrices_types
 from typing import Union
 
-def square_checker(raw_matrix: raw_matrix_type) -> bool:
+def square_checker(raw_matrix: raw_matrix_type) -> matrices_types:
     if len(raw_matrix) == len(raw_matrix[0]):
-        return True
-    return False
+        return SquareMatrix(raw_matrix)
+    return Matrix(raw_matrix)
 
 def multiply_scalar(matrix: matrices_types, scalar: [int, float]) -> matrices_types:
     multiply = [[i * scalar for i in k] for k in matrix.raw_matrix]
-    result = (SquareMatrix(multiply) if square_checker(multiply) else Matrix(multiply))
+    result = square_checker(multiply)
     return result
 
 def multiply_matrix(this: matrices_types, other: matrices_types) -> matrices_types:
@@ -21,7 +21,7 @@ def multiply_matrix(this: matrices_types, other: matrices_types) -> matrices_typ
                     this.raw_matrix[row][k] * other.raw_matrix[k][column] for k in range(other.rows_number))
                 multiply_row.append(multiply_elem)
             multiply.append(multiply_row)
-        result = (SquareMatrix(multiply) if square_checker(multiply) else Matrix(multiply))
+        result = square_checker(multiply)
         return result
     else:
         raise Exception("Can not be multiplied")
@@ -32,14 +32,13 @@ def __add__(this: matrices_types, other: matrices_types) -> matrices_types:
         for k in this.raw_matrix:
             for i in k:
                sum_raw_matrix = [[i + n for n in m] for m in other.raw_matrix]
-        result = (SquareMatrix(sum_raw_matrix) if square_checker(sum_raw_matrix) else Matrix(sum_raw_matrix))
+        result = square_checker(sum_raw_matrix)
         return result
 
 def __eq__(this: matrices_types, other: matrices_types) -> bool:
     if this.raw_matrix == other.raw_matrix:
         return True
-    else:
-        return False
+    return False
 
 def __mul__(this: matrices_types, other: Union[matrices_types, int, float]) -> matrices_types:
     if isinstance(other, Matrix):
@@ -53,10 +52,11 @@ def __pow__(square_matrix: SquareMatrix, power: int) -> SquareMatrix:
         # Initialize the result as the identity matrix
     power = IdentityMatrix(square_matrix.rows_number, square_matrix.rows_number)
     while power > 0:
-        if power % 2 == 1:
+        even_number = 2
+        if power % even_number == 1:
             power = power * square_matrix.origin
         square_matrix.origin *= square_matrix.origin
-        power //= 2
+        power //= even_number
     return SquareMatrix(power.raw_matrix)
 
 def inverse_matrix(square_matrix: SquareMatrix) -> SquareMatrix:
@@ -64,5 +64,6 @@ def inverse_matrix(square_matrix: SquareMatrix) -> SquareMatrix:
     if determinant == 0:
         raise Exception("Cannot be inversed, because determinant equals to zero")
     transposed_cofactor_matrix = square_matrix.cofactor().transpose()
-    inverse = multiply_scalar(transposed_cofactor_matrix, 1/determinant)
-    return inverse
+    inverse = multiply_scalar(transposed_cofactor_matrix, 1/determinant).raw_matrix
+    result = square_checker(inverse)
+    return result
