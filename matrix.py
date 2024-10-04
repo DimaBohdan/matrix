@@ -92,7 +92,8 @@ Enter number of columns: 4
 8 1 3 2
 '''
 if __name__ == "__main__":
-   print(Matrix([[1], [2]]).__dict__)
+   print(dir(Matrix([[4]])))
+
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
    #a = Matrix(input_handler.space_separated_row_by_row(m))
