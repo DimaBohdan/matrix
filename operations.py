@@ -60,10 +60,10 @@ def __pow__(square_matrix: SquareMatrix, power: int) -> SquareMatrix:
     return SquareMatrix(power.raw_matrix)
 
 def inverse_matrix(square_matrix: SquareMatrix) -> SquareMatrix:
-    determinant = square_matrix.determinant()
+    determinant = square_matrix.determinant
     if determinant == 0:
         raise Exception("Cannot be inversed, because determinant equals to zero")
-    transposed_cofactor_matrix = square_matrix.cofactor().transpose()
+    transposed_cofactor_matrix = square_matrix.cofactor.transpose
     inverse = multiply_scalar(transposed_cofactor_matrix, 1/determinant).raw_matrix
     result = square_checker(inverse)
     return result

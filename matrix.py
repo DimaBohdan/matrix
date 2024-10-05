@@ -3,7 +3,7 @@ from typing import Union, Generic
 from copy import deepcopy
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
-def matrix_checker(raw_matrix: raw_matrix_type):
+def matrix_checker(raw_matrix):
    list_checker = all(isinstance(row, list) for row in raw_matrix)
    digit_checker = 0
    for row in raw_matrix:
@@ -39,6 +39,8 @@ class Matrix:
 class SquareMatrix(Matrix):
    def __init__(self, raw_matrix):
       super().__init__(raw_matrix)
+      if self.rows_number != self.columns_number:
+         raise TypeError
 
    def sub_matrix(self, row: int, column: int) -> SquareMatrix:
       sub_matrix = deepcopy(self.raw_matrix)
@@ -49,15 +51,16 @@ class SquareMatrix(Matrix):
 
    def minor(self, row: int, column: int) -> Union[int, float]:
       if self.rows_number == 1 and self.columns_number == 1:
-         minor = self.determinant()
+         minor = self.determinant
       else:
-         minor = self.sub_matrix(row, column).determinant()
+         minor = self.sub_matrix(row, column).determinant
       return minor
 
    def adjunct(self, row: int, column: int) -> Union[int, float]:
-      adjunct = (-1) ** (row + column) * self.minor(row, column)
+      adjunct = round((-1) ** (row + column) * self.minor(row, column), 7)
       return adjunct
 
+   @property
    def determinant(self) -> Union[int, float]:
       if self.rows_number == 1:
          return self.raw_matrix[0][0]
@@ -69,8 +72,8 @@ class SquareMatrix(Matrix):
       determinant = 0
       for row in self.range_rows_number:
          determinant += self.adjunct(row, 0) * self.raw_matrix[row][0]
-      return determinant
-
+      return round(determinant, 7)
+   @property
    def cofactor(self) -> SquareMatrix:
       if self.rows_number != self.columns_number:
          raise Exception("Cannot find a cofactor for a non-square matrix")
@@ -106,7 +109,7 @@ Enter number of columns: 4
 '''
 if __name__ == "__main__":
    print(Matrix([[3, 4, 5], [2, 8.0, 7.1]]))
-   print(Matrix([[3, "4", 5], [2, 8.0, 7.1]]).transpose)
+   print(SquareMatrix([[3, "4", 5], [2, 8.0, 7.1]]).transpose)
    function = getattr(Matrix([[3, 4]]), "transpose")
    print(function)
    m = int(input("Enter number of rows: "))
@@ -117,7 +120,7 @@ if __name__ == "__main__":
    #print(a.transpose())
    #d = a.transpose()
    #print(a)
-   #print((a**3).raw_matrix)
+   #print((a**3).func)
    #if a==d:
      # print('Ok')
    #else:
@@ -126,9 +129,9 @@ if __name__ == "__main__":
 #input example: 3
    #print(d*5)
    #e = a
-   #print(e.transpose().raw_matrix)
+   #print(e.transpose().func)
    #result = a + d
-   #print(f' New {result.raw_matrix}')
+   #print(f' New {result.func}')
 #print([f,h])
    #mult = a * result
-   #print(mult.raw_matrix)
+   #print(mult.func)

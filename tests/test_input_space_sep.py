@@ -3,11 +3,11 @@ import input_handler
 from input_handler import space_separated
 
 
-@pytest.mark.parametrize("raw_matrix, attribute, result",
+@pytest.mark.parametrize("func, attribute, result",
 [("""3 5 1
 8 7 2
 4 3 2""",
-        "raw_matrix",
+        "func",
         [[3.0, 5.0, 1.0], [8.0, 7.0, 2.0], [4.0, 3.0, 2.0]]),
 ("""3 5
 8 7
@@ -23,7 +23,7 @@ from input_handler import space_separated
 def test_space_separated_init(raw_matrix, attribute, result):
     assert input_handler.Matrix(space_separated(raw_matrix)).__dict__[attribute] == result
 
-@pytest.mark.parametrize("raw_matrix, attribute, expected_exception", [
+@pytest.mark.parametrize("func, attribute, expected_exception", [
         ("""3 5 1 4 2 1
 8 7 2 2 4 5
 4 3 2.1 3 4 5""",
