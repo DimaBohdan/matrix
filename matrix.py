@@ -1,8 +1,18 @@
 from __future__ import annotations
-from typing import Union
+from typing import Union, Generic
 from copy import deepcopy
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
+def matrix_checker(raw_matrix: raw_matrix_type):
+   list_checker = all(isinstance(row, list) for row in raw_matrix)
+   digit_checker = 0
+   for row in raw_matrix:
+      digit_checker = all(isinstance(elem, (int, float)) for elem in row)
+      if not digit_checker:
+         break
+   if isinstance(raw_matrix, list) and list_checker and digit_checker:
+      return True
+   return False
 
 class Matrix:
    def __init__(self, raw_matrix: raw_matrix_type):
@@ -15,8 +25,10 @@ class Matrix:
       self.is_square = (self.rows_number == self.columns_number)
       self.is_row_vector = (self.rows_number == 1)
       self.is_column_vector = (self.columns_number == 1)
+      if not matrix_checker(self.raw_matrix):
+         raise TypeError
 
-
+   @property
    def transpose(self) -> matrices_types:
       transpose = [[i[elem] for i in self.raw_matrix] for elem in self.range_columns_number]
       return Matrix(transpose)
@@ -51,7 +63,8 @@ class SquareMatrix(Matrix):
          return self.raw_matrix[0][0]
 
       if self.rows_number == 2:
-         return self.raw_matrix[0][0] * self.raw_matrix[1][1] - self.raw_matrix[0][1] * self.raw_matrix[1][0]
+         return (self.raw_matrix[0][0] * self.raw_matrix[1][1] -
+                 self.raw_matrix[0][1] * self.raw_matrix[1][0])
 
       determinant = 0
       for row in self.range_rows_number:
@@ -92,8 +105,10 @@ Enter number of columns: 4
 8 1 3 2
 '''
 if __name__ == "__main__":
-   print(dir(Matrix([[4]])))
-
+   print(Matrix([[3, 4, 5], [2, 8.0, 7.1]]))
+   print(Matrix([[3, "4", 5], [2, 8.0, 7.1]]).transpose)
+   function = getattr(Matrix([[3, 4]]), "transpose")
+   print(function)
    m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
    #a = Matrix(input_handler.space_separated_row_by_row(m))
