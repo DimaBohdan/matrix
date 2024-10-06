@@ -41,8 +41,6 @@ def test_square_matrix_pow(matrix, power, result):
     assert operations.Matrix(matrix) ** power == result
 
 
-def test_square_matrix_inverse()
-
 @pytest.mark.parametrize("raw_matrix, method, result",
                          [([[3, 4, 5], [2, 8.0, 7.1]],
                            "__str__",

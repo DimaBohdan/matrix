@@ -5,7 +5,7 @@ from input_handler import space_separated
 
 @pytest.mark.parametrize("rows_num, columns_num, attribute, result",
 [(3, 3,
-        "func",
+        "raw_matrix",
         [[1, 0, 0], [0, 1, 0], [0, 0, 1]]),
 ])
 def test_space_separated_init(rows_num, columns_num, attribute, result):

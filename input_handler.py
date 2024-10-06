@@ -1,6 +1,6 @@
 from logging import raiseExceptions
 from matrix import Matrix, SquareMatrix, IdentityMatrix
-from operations import multiply_scalar, multiply_matrix
+
 
 def space_separated_row_by_row(row_num: int) -> list:
    matrix_list = []
