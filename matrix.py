@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import Union, Generic
 from copy import deepcopy
 from functools import partial
-from operations import Operator
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
 def matrix_checker(raw_matrix):
@@ -37,8 +36,18 @@ class Matrix:
 
    def __str__(self) -> str:
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
-   def __add__(self):
-      return partial(Operator(self).__add__())
+
+   def __add__(self, other):
+      from operations import Operator
+      return Operator.add(Matrix(self.raw_matrix), other)
+
+   def __mul__(self, other):
+      from operations import Operator
+      return Operator.mul(Matrix(self.raw_matrix), other)
+
+   def __eq__(self, other):
+      from operations import Operator
+      return Operator.eq(Matrix(self.raw_matrix), other)
 
 class SquareMatrix(Matrix):
    def __init__(self, raw_matrix):
@@ -77,6 +86,7 @@ class SquareMatrix(Matrix):
       for row in self.range_rows_number:
          determinant += self.adjunct(row, 0) * self.raw_matrix[row][0]
       return round(determinant, 7)
+
    @property
    def cofactor(self) -> SquareMatrix:
       if self.rows_number != self.columns_number:
@@ -86,6 +96,19 @@ class SquareMatrix(Matrix):
          cofactor_row = [self.adjunct(row, column) for column in self.range_columns_number]
          cofactor_matrix.append(cofactor_row)
       return SquareMatrix(cofactor_matrix)
+
+   def __pow__(self, power):
+      from operations import Operator
+      return Operator.pow(Matrix(self.raw_matrix), power)
+
+   @property
+   def inverse_matrix(self) -> SquareMatrix:
+      determinant = self.determinant
+      if determinant == 0:
+         raise Exception("Cannot be inversed, because determinant equals to zero")
+      transposed_cofactor_matrix = self.cofactor.transpose
+      inverse = transposed_cofactor_matrix * (1 / determinant)
+      return inverse
 
 
 class IdentityMatrix(Matrix):
@@ -112,11 +135,13 @@ Enter number of columns: 4
 8 1 3 2
 '''
 if __name__ == "__main__":
-   print(Matrix([[3, 4, 5], [2, 8.0, 7.1]]))
-   print(SquareMatrix([[3, "4", 5], [2, 8.0, 7.1]]).transpose)
-   function = getattr(Matrix([[3, 4]]), "transpose")
-   print(function)
-   m = int(input("Enter number of rows: "))
+   a = Matrix([[3, 4, 5], [2, 8.0, 7.1]])
+   b = SquareMatrix([[3, 4, 5], [2, 8.0, 7.1], [3, 2, 1]]).inverse_matrix
+   print(b)
+   #print(SquareMatrix([[3, 5], [2, 7.1]]).transpose)
+   #function = getattr(Matrix([[3, 4]]), "transpose")
+   #print(function)
+   #m = int(input("Enter number of rows: "))
    #columns_number = int(input("Enter number of columns: "))
    #a = Matrix(input_handler.space_separated_row_by_row(m))
    #print(a.determinant())
