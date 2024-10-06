@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Union, Generic
 from copy import deepcopy
+from functools import partial
+from operations import Operator
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
 def matrix_checker(raw_matrix):
@@ -35,6 +37,8 @@ class Matrix:
 
    def __str__(self) -> str:
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
+   def __add__(self):
+      return partial(Operator(self).__add__())
 
 class SquareMatrix(Matrix):
    def __init__(self, raw_matrix):
