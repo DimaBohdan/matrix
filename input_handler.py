@@ -21,4 +21,4 @@ def space_separated(text: str) -> list:
       return matrix_list
    except:
       raise ValueError
-print(Matrix(space_separated('3 5 1\n8 7 2\n4 3 2')))
+#print(Matrix(space_separated('3 5 1\n8 7 2\n4 3 2')))

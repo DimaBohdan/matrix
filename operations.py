@@ -42,7 +42,7 @@ class Operator:
             raise Exception("Can not be multiplied")
 
     @staticmethod
-    def same_dimension(this, other):
+    def same_dimension(this: 'Matrix, SquareMatrix', other: 'Matrix, SquareMatrix'):
         if this.rows_number == other.rows_number and \
                 this.columns_number == other.columns_number:
             return True
@@ -51,12 +51,17 @@ class Operator:
     @staticmethod
     def add(this: 'Matrix, SquareMatrix', other: 'Matrix, SquareMatrix') -> 'Matrix, SquareMatrix':
         if Operator.same_dimension(this, other):
-            sum_raw_matrix = []
-            for k in this.raw_matrix:
-                for i in k:
-                   sum_raw_matrix = [[i + n for n in m] for m in other.raw_matrix]
+            sum_raw_matrix = [
+                [
+                    this.raw_matrix[row][col] + other.raw_matrix[row][col]
+                    for col in range(len(this.raw_matrix[0]))
+                ]
+                for row in range(len(this.raw_matrix))
+            ]
             result = Operator.square_checker(sum_raw_matrix)
             return result
+        else:
+            raise TypeError
 
     @staticmethod
     def eq(this: 'Matrix, SquareMatrix', other: 'Matrix, SquareMatrix') -> bool:
@@ -103,5 +108,5 @@ class Operator:
         return matrix.SquareMatrix(result.raw_matrix)
 
 
-a = matrix.Matrix([[3,4,5], [2, 3, 1]])
-print(Operator._multiply_scalar(a, [5, 10, 12]))
+#a = matrix.Matrix([[3,4,5], [2, 3, 1]])
+#print(Operator._multiply_scalar(a, [5, 10, 12]))

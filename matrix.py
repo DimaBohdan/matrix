@@ -136,8 +136,9 @@ Enter number of columns: 4
 '''
 if __name__ == "__main__":
    a = Matrix([[3, 4, 5], [2, 8.0, 7.1]])
-   b = SquareMatrix([[3, 4, 5], [2, 8.0, 7.1], [3, 2, 1]]).inverse_matrix
-   print(b)
+   #b = SquareMatrix([[3, 4, 5], [2, 8.0, 7.1], [3, 2, 1]]).inverse_matrix
+   #print(a.__dict__)
+   #print(b)
    #print(SquareMatrix([[3, 5], [2, 7.1]]).transpose)
    #function = getattr(Matrix([[3, 4]]), "transpose")
    #print(function)
