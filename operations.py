@@ -7,13 +7,13 @@ class Operator:
         pass
 
     @staticmethod
-    def square_checker(raw_matrix) -> 'Matrix, SquareMatrix':
+    def square_checker(raw_matrix: matrix.raw_matrix_type) -> 'Matrix, SquareMatrix':
         if len(raw_matrix) == len(raw_matrix[0]):
             return matrix.SquareMatrix(raw_matrix)
         return matrix.Matrix(raw_matrix)
 
     @staticmethod
-    def _multiply_scalar(matrix_arg, scalar) -> 'Matrix, SquareMatrix':
+    def _multiply_scalar(matrix_arg, scalar: (list[Union[int, float]], Union[int, float])) -> 'Matrix, SquareMatrix':
         try:
             scalar = math.prod(scalar)
         except:
@@ -27,15 +27,14 @@ class Operator:
             -> 'Matrix, SquareMatrix':
         this, other = argument
         if this.columns_number == other.rows_number:
-            multiply = []
-            for row in range(this.rows_number):
-                multiply_row = []
-                for column in range(other.columns_number):
-                    multiply_elem = sum(
-                        this.raw_matrix[row][k] * other.raw_matrix[k][column]
-                        for k in range(other.rows_number))
-                    multiply_row.append(multiply_elem)
-                multiply.append(multiply_row)
+            multiply = [
+                [
+                    sum(this.raw_matrix[row][common] * other.raw_matrix[common][col]
+                        for common in other.range_rows_number)
+                    for col in other.range_columns_number
+                ]
+                for row in this.range_rows_number
+            ]
             result = Operator.square_checker(multiply)
             return result
         else:

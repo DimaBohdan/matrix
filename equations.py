@@ -1,6 +1,5 @@
 import input_handler
 
-
 def equation_solver():
     input_command = int(input("Enter the type of matrix equation (1 or 2):\n 1 - Ax=B\n 2 - xA=B\n"))
     row_a = int(input("Input number of rows for matrix A: "))

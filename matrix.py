@@ -4,7 +4,7 @@ from copy import deepcopy
 from functools import partial
 
 raw_matrix_type = Union[list[list[float]], list[list[int]]]
-def matrix_checker(raw_matrix):
+def matrix_checker(raw_matrix: raw_matrix_type) -> bool:
    list_checker = all(isinstance(row, list) for row in raw_matrix)
    digit_checker = 0
    for row in raw_matrix:
@@ -37,15 +37,15 @@ class Matrix:
    def __str__(self) -> str:
       return '\n'.join([' '.join(map(str, row)) for row in self.raw_matrix])
 
-   def __add__(self, other):
+   def __add__(self, other: matrices_types) -> matrices_types:
       from operations import Operator
       return Operator.add(Matrix(self.raw_matrix), other)
 
-   def __mul__(self, other):
+   def __mul__(self, other: (matrices_types, Union[int, float])) -> matrices_types:
       from operations import Operator
       return Operator.mul(Matrix(self.raw_matrix), other)
 
-   def __eq__(self, other):
+   def __eq__(self, other: matrices_types) -> bool:
       from operations import Operator
       return Operator.eq(Matrix(self.raw_matrix), other)
 
@@ -97,7 +97,7 @@ class SquareMatrix(Matrix):
          cofactor_matrix.append(cofactor_row)
       return SquareMatrix(cofactor_matrix)
 
-   def __pow__(self, power):
+   def __pow__(self, power: Union[int, float]) -> SquareMatrix:
       from operations import Operator
       return Operator.pow(Matrix(self.raw_matrix), power)
 
@@ -134,34 +134,3 @@ Enter number of columns: 4
 2 4 5 9
 8 1 3 2
 '''
-if __name__ == "__main__":
-   a = Matrix([[3, 4, 5], [2, 8.0, 7.1]])
-   #b = SquareMatrix([[3, 4, 5], [2, 8.0, 7.1], [3, 2, 1]]).inverse_matrix
-   #print(a.__dict__)
-   #print(b)
-   #print(SquareMatrix([[3, 5], [2, 7.1]]).transpose)
-   #function = getattr(Matrix([[3, 4]]), "transpose")
-   #print(function)
-   #m = int(input("Enter number of rows: "))
-   #columns_number = int(input("Enter number of columns: "))
-   #a = Matrix(input_handler.space_separated_row_by_row(m))
-   #print(a.determinant())
-   #print(a.inverse_matrix())
-   #print(a.transpose())
-   #d = a.transpose()
-   #print(a)
-   #print((a**3).func)
-   #if a==d:
-     # print('Ok')
-   #else:
-    #  print('No')
-#print(d)
-#input example: 3
-   #print(d*5)
-   #e = a
-   #print(e.transpose().func)
-   #result = a + d
-   #print(f' New {result.func}')
-#print([f,h])
-   #mult = a * result
-   #print(mult.func)
