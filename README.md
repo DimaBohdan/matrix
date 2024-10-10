@@ -1,5 +1,3 @@
-# LinAlg: Matrix Calculator and Equations Solver.
-
 <h1 align="center" style="font-weight: bold;">LinAlg: Matrix Calculator and Equations Solver. 💻</h1>
 
 <p align="center">This project is dedicated to the basic topic of linear algebra - operations on matrices and matrix equations. This is my attempt to automate many routine actions studied at the university. </p>
