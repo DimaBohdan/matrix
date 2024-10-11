@@ -1,5 +1,5 @@
 from logging import raiseExceptions
-from matrix import Matrix, SquareMatrix, IdentityMatrix
+from matrix import Matrix, SquareMatrix
 
 
 def space_separated_row_by_row(row_num: int) -> list:

@@ -12,12 +12,12 @@ from input_handler import space_separated
 ("""3 5
 8 7
 4 3""",
-        "rows_number",
+        "__rows_number",
         3),
 ("""3 5 1 4 2 1
 8 7 2 2 4 5
 4 3 2.1 3 4 5""",
-    "columns_number",
+    "__columns_number",
     6),
 ])
 def test_space_separated_init(raw_matrix, attribute, result):
@@ -32,7 +32,7 @@ def test_space_separated_init(raw_matrix, attribute, result):
         ("""3 5 1 4 2 1
 8 . 2 2 4 5
 4 3 2.1 3 4 5""",
-         "rows_number",
+         "__rows_number",
          ValueError),
     ("""2 3 1.5
 2 3 1.4 3 4 1.1""",
@@ -40,7 +40,7 @@ def test_space_separated_init(raw_matrix, attribute, result):
      ValueError),
         ([3, 5, 1, 4, 2, 1,
 8, 7, 2, 2, 4, 5,
-4, 3, 2.1, 3, 4, 5], "columns_number", ValueError),
+4, 3, 2.1, 3, 4, 5], "__columns_number", ValueError),
 
 ])
 def test_initialization_broken(raw_matrix, attribute, expected_exception):

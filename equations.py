@@ -1,5 +1,8 @@
 import input_handler
 
+class Equation:
+    def __init__(self, matrix_args_list):
+    
 def equation_solver():
     input_command = int(input("Enter the type of matrix equation (1 or 2):\n 1 - Ax=B\n 2 - xA=B\n"))
     row_a = int(input("Input number of rows for matrix A: "))
@@ -11,14 +14,15 @@ def equation_solver():
     elif input_command ==2:
         second_type_equation(a, b)
     else:
-        print('Input is not correct')
+        raise Exception('Input is not correct')
+def equation_normalize():
 
 def first_type_equation(a, b):
     res = a.inverse_matrix * b
-    print(res)
+    return res
 
 def second_type_equation(a, b):
     res = b * a.inverse_matrix
-    print(res)
+    return res
 
 equation_solver()

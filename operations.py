@@ -26,7 +26,7 @@ class Operator:
     def _multiply_matrix(argument: 'Matrix, SquareMatrix') \
             -> 'Matrix, SquareMatrix':
         this, other = argument
-        if this.columns_number == other.rows_number:
+        if this.__columns_number == other.__rows_number:
             multiply = [
                 [
                     sum(this.raw_matrix[row][common] * other.raw_matrix[common][col]
@@ -42,8 +42,8 @@ class Operator:
 
     @staticmethod
     def same_dimension(this: 'Matrix, SquareMatrix', other: 'Matrix, SquareMatrix'):
-        if this.rows_number == other.rows_number and \
-                this.columns_number == other.columns_number:
+        if this.__rows_number == other.__rows_number and \
+                this.__columns_number == other.__columns_number:
             return True
         return False
 
@@ -97,7 +97,7 @@ class Operator:
         if power <= 0:
             raise Exception("Cannot raise a matrix to the power")
             # Initialize the result as the identity matrix
-        result = matrix.IdentityMatrix(square_matrix.rows_number, square_matrix.rows_number)
+        result = matrix._IdentityMatrix(square_matrix.__rows_number, square_matrix.__rows_number)
         while power > 0:
             even_number = 2
             if power % even_number == 1:
