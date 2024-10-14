@@ -18,11 +18,11 @@ def equation_solver():
 def equation_normalize():
 
 def first_type_equation(a, b):
-    res = a.inverse_matrix * b
+    res = a.inverse * b
     return res
 
 def second_type_equation(a, b):
-    res = b * a.inverse_matrix
+    res = b * a.inverse
     return res
 
 equation_solver()

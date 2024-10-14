@@ -1,5 +1,3 @@
-from .matrix import Matrix, SquareMatrix
-from .operations import Operator
-from .equations import equation_solver
-
-__all__ = ['Matrix', 'SquareMatrix', 'Operator', 'input_handler']
+from .matrix import Matrix
+from operations import ShuntingYard
+__all__ = ['Matrix', 'ShuntingYard', 'input_handler']
