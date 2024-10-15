@@ -1,7 +1,8 @@
 from matrix import Matrix
+import re
 import numpy as np
 
-operators = set('()+-*^~')
+operators = set('()+-*^T')
 class ShuntingYard:
     def __init__(self):
         self.operators = {
@@ -9,7 +10,7 @@ class ShuntingYard:
             '-': {'precedence': 1, 'associativity': 'L'},
             '*': {'precedence': 2, 'associativity': 'L'},
             '^': {'precedence': 3, 'associativity': 'R'},
-            '~': {'precedence': 4, 'associativity': 'R'}
+            'T': {'precedence': 4, 'associativity': 'R'}
         }
 
     def is_operator(self, token: str) -> bool:
@@ -54,18 +55,21 @@ class ShuntingYard:
             if isinstance(token, (Matrix, int, float)):
                 stack.append(token)
             elif token in operators:
-                b = stack.pop()
-                a = stack.pop()
-                if token == "+":
-                    stack.append(a + b)
-                elif token == "-":
-                    stack.append(a - b)
-                elif token == "*":
-                    stack.append(a * b)
-                elif token == "^":
-                    stack.append(a ** b)
-                elif token == "~":
-                    stack.append(~b)
+                if token == "T":
+                    a = stack.pop()
+                    stack.append(a.transpose())
+                else:
+                    b = stack.pop()
+                    a = stack.pop()
+                    if token == "+":
+                        stack.append(a + b)
+                    elif token == "-":
+                        stack.append(a - b)
+                    elif token == "*":
+                        stack.append(a * b)
+                    elif token == "^":
+                        stack.append(a ** b)
+
         return stack[0]
 
 
@@ -74,8 +78,8 @@ def tokenize(expression: str, matrices_dict: dict) -> list:
     temp = ''
 
     def add_temp_token(temp: str):
-        if temp.isdigit():
-            tokens.append(int(temp))
+        if re.match(r'^\d*\.?\d+$', temp):  # Recognize floating point numbers
+            tokens.append(float(temp) if '.' in temp else int(temp))
         elif temp:  # Check if temp is not empty
             try:
                 tokens.append(matrices_dict[temp])
@@ -88,7 +92,7 @@ def tokenize(expression: str, matrices_dict: dict) -> list:
             add_temp_token(temp)
             temp = ''  # Reset temp
             tokens.append(char)
-        elif char.isalnum():
+        elif char.isalnum() or char == '.':
             temp += char
         elif char.isspace():
             add_temp_token(temp)
@@ -102,7 +106,7 @@ A = Matrix(np.array([[1, 2], [3, 4]]))
 B = Matrix(np.array([[2, 0], [1, 3]]))
 matrices_dict = {'A': A, 'B': B}
 
-expression = ("(A * 2)^3^(-1)")
+expression = "1.2+(TT(A - 2 * 2)^3)"
 tokens = tokenize(expression, matrices_dict)
 print("Tokens:", tokens)
 

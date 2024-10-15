@@ -119,8 +119,7 @@ class Matrix:
 
     def __radd__(self, other):
         if isinstance(other, int | float):
-            return Matrix(self.raw_matrix * (-1)+ other * np.eye(self.matrix_shape[0],
-                                self.raw_matrix.shape[1]))
+            return self + other
         else:
             raise ValueError(f"Right-side adding not supported between Matrix and {type(other)}")
 
@@ -250,4 +249,4 @@ if __name__ == "__main__":
     b = Matrix(np.array([[3, 9, -4], [1, 5, -8], [4, 2, -9]]))
     print(a.determinant())
     print(a.cofactor())
-    print(3 - a + 4)
+    print(a ** 2.3)
