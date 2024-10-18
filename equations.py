@@ -57,7 +57,6 @@ def __only_invertible(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, A
 
     return wrapper
 
-
 @staticmethod
 def __only_able_to_power(func: Callable[[Matrix, int], Any]) -> Callable[[Matrix, int], Any]:
     @wraps(func)

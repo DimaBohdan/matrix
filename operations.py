@@ -3,6 +3,7 @@ import re
 import numpy as np
 
 operators = set('()+-*^T')
+
 class ShuntingYard:
     def __init__(self):
         self.operators = {

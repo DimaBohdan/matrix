@@ -2,7 +2,6 @@ from __future__ import annotations
 from functools import wraps
 from typing import Callable, Self, Any
 import numpy as np
-import mypy
 
 class Matrix:
     def __init__(self, raw_matrix: np.ndarray[Any, np.dtype]) -> None:
