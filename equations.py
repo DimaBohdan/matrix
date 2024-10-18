@@ -1,28 +1,70 @@
-import input_handler
+@staticmethod
+def same_dimension(func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
+    @wraps(func)
+    def wrapper(this: Matrix, other: Matrix) -> Any:
+        if this.matrix_shape == other.matrix_shape:
+            return func(this, other)
+        else:
+            raise ValueError("Matrices should have same dimensions to do this action!")
 
-class Equation:
-    def __init__(self, matrix_args_list):
-    
-def equation_solver():
-    input_command = int(input("Enter the type of matrix equation (1 or 2):\n 1 - Ax=B\n 2 - xA=B\n"))
-    row_a = int(input("Input number of rows for matrix A: "))
-    a = input_handler.SquareMatrix(input_handler.space_separated_row_by_row(row_a))
-    row_b = int(input("Input number of rows for matrix B: "))
-    b = input_handler.Matrix(input_handler.space_separated_row_by_row(row_b))
-    if input_command == 1:
-        first_type_equation(a, b)
-    elif input_command ==2:
-        second_type_equation(a, b)
-    else:
-        raise Exception('Input is not correct')
-def equation_normalize():
+    return wrapper
 
-def first_type_equation(a, b):
-    res = a.inverse * b
-    return res
 
-def second_type_equation(a, b):
-    res = b * a.inverse
-    return res
+@staticmethod
+def is_multipliable(func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
+    @wraps(func)
+    def wrapper(this: Matrix, other: Matrix) -> Any:
+        if this.matrix_shape[1] == other.matrix_shape[0]:
+            return func(this, other)
+        else:
+            raise ValueError("Unable to do this action, invalid matrices!")
 
-equation_solver()
+    return wrapper
+
+
+@staticmethod
+def __only_squared(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
+    @wraps(func)
+    def wrapper(matrix: Matrix, *args: Any, **kwargs: Any) -> Any:
+        if matrix.is_square:
+            return func(matrix, *args, **kwargs)
+        else:
+            raise ValueError("Matrix should be squared to do this action!")
+
+    return wrapper
+
+
+@staticmethod
+def __only_vector(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
+    @wraps(func)
+    def wrapper(self, *args, **kwargs) -> Any:
+        if self.is_row_vector() or self.is_column_vector():
+            return func(self, *args, **kwargs)
+        else:
+            raise ValueError("Matrix should be vector to do this action!")
+
+    return wrapper
+
+
+@staticmethod
+def __only_invertible(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
+    @wraps(func)
+    def wrapper(self, *args, **kwargs) -> Any:
+        if self.determinant() != 0:
+            return func(self, *args, **kwargs)
+        else:
+            raise ValueError("Matrix should be invertible to do this action!")
+
+    return wrapper
+
+
+@staticmethod
+def __only_able_to_power(func: Callable[[Matrix, int], Any]) -> Callable[[Matrix, int], Any]:
+    @wraps(func)
+    def wrapper(self, power, *args, **kwargs) -> Any:
+        if power % 1 == 0:
+            return func(self, power, *args, **kwargs)
+        else:
+            raise ValueError("Power should be a whole number to do this action!")
+
+    return wrapper

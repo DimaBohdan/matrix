@@ -10,7 +10,7 @@ class ShuntingYard:
             '-': {'precedence': 1, 'associativity': 'L'},
             '*': {'precedence': 2, 'associativity': 'L'},
             '^': {'precedence': 3, 'associativity': 'R'},
-            'T': {'precedence': 4, 'associativity': 'R'}
+            'T': {'precedence': 4, 'associativity': 'R'},
         }
 
     def is_operator(self, token: str) -> bool:
@@ -24,7 +24,7 @@ class ShuntingYard:
 
     def to_postfix(self: "ShuntingYard", tokens: list) -> list:
         output_queue = []
-        operator_stack = []
+        operator_stack = [] #type: list[list]
 
         for token in tokens:
             if isinstance(token, (Matrix, int, float)):
@@ -49,7 +49,7 @@ class ShuntingYard:
         return output_queue
 
     @staticmethod
-    def evaluate_postfix(tokens: list) -> Matrix:
+    def evaluate_postfix(tokens: list) -> Matrix | int | float:
         stack = []
         for token in tokens:
             if isinstance(token, (Matrix, int, float)):
@@ -72,45 +72,45 @@ class ShuntingYard:
 
         return stack[0]
 
+    @staticmethod
+    def tokenize(expression: str, matrices_dict: dict) -> list:
+        tokens = []
+        temp = ''
+        def add_temp_token(temp: str):
+            if re.match(r'^\d*\.?\d+$', temp):  # Recognize floating point numbers
+                tokens.append(float(temp) if '.' in temp else int(temp))
+            elif temp:  # Check if temp is not empty
+                try:
+                    tokens.append(matrices_dict[temp])
+                except KeyError:
+                    raise ValueError(f"Unknown variable or matrix '{temp}' in expression.")
 
-def tokenize(expression: str, matrices_dict: dict) -> list:
-    tokens = []
-    temp = ''
-
-    def add_temp_token(temp: str):
-        if re.match(r'^\d*\.?\d+$', temp):  # Recognize floating point numbers
-            tokens.append(float(temp) if '.' in temp else int(temp))
-        elif temp:  # Check if temp is not empty
-            try:
-                tokens.append(matrices_dict[temp])
-            except KeyError:
-                raise ValueError(f"Unknown variable or matrix '{temp}' in expression.")
-
-  # Use a set for efficient lookup
-    for char in expression:
-        if char in operators:
-            add_temp_token(temp)
-            temp = ''  # Reset temp
-            tokens.append(char)
-        elif char.isalnum() or char == '.':
-            temp += char
-        elif char.isspace():
-            add_temp_token(temp)
-            temp = ''
-    add_temp_token(temp)
-    return tokens
+      # Use a set for efficient lookup
+        for char in expression:
+            if char in operators:
+                add_temp_token(temp)
+                temp = ''  # Reset temp
+                tokens.append(char)
+            elif char.isalnum() or char == '.':
+                temp += char
+            elif char.isspace():
+                add_temp_token(temp)
+                temp = ''
+        add_temp_token(temp)
+        return tokens
 
 
 # Example usage
 A = Matrix(np.array([[1, 2], [3, 4]]))
 B = Matrix(np.array([[2, 0], [1, 3]]))
-matrices_dict = {'A': A, 'B': B}
 
-expression = "1.2+(TT(A - 2 * 2)^3)"
-tokens = tokenize(expression, matrices_dict)
-print("Tokens:", tokens)
 
 shunting_yard = ShuntingYard()
+matrices_dict = {'A': A, 'B': B}
+expression = "1.2+(TT(A - 2 * 2)^3)"
+tokens = shunting_yard.tokenize(expression, matrices_dict)
+print("Tokens:", tokens)
+
 postfix = shunting_yard.to_postfix(tokens)
 print("Postfix:", postfix)
 

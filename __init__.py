@@ -1,3 +1,3 @@
 from .matrix import Matrix
-from operations import ShuntingYard
-__all__ = ['Matrix', 'ShuntingYard', 'input_handler']
+from operations import ShuntingYard, tokenize
+__all__ = ['Matrix', 'ShuntingYard', 'tokenize']
