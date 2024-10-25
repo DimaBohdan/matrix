@@ -1,4 +1,6 @@
-from matrix import Matrix
+import csv
+
+from LinAlgebra.matrix import Matrix
 import re
 import numpy as np
 
@@ -23,7 +25,7 @@ class ShuntingYard:
     def associativity(self, operator: str) -> str:
         return self.operators[operator]['associativity']
 
-    def to_postfix(self: "ShuntingYard", tokens: list) -> list:
+    def to_postfix(self, tokens: list) -> list:
         output_queue = []
         operator_stack = [] #type: list[list]
 
@@ -99,21 +101,3 @@ class ShuntingYard:
                 temp = ''
         add_temp_token(temp)
         return tokens
-
-
-# Example usage
-A = Matrix(np.array([[1, 2], [3, 4]]))
-B = Matrix(np.array([[2, 0], [1, 3]]))
-
-
-shunting_yard = ShuntingYard()
-matrices_dict = {'A': A, 'B': B}
-expression = "1.2+(TT(A - 2 * 2)^3)"
-tokens = shunting_yard.tokenize(expression, matrices_dict)
-print("Tokens:", tokens)
-
-postfix = shunting_yard.to_postfix(tokens)
-print("Postfix:", postfix)
-
-result = shunting_yard.evaluate_postfix(postfix)
-print("Result:\n", result)
