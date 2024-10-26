@@ -206,11 +206,11 @@ class Matrix:
             determinant = 0
             for row in self.range_rows_number:
                 determinant += self.adjunct(row, 0) * self.raw_matrix[row, 0]
-            return determinant
+            return round(determinant, 6)
 
     @only_squared
     def cofactor(self) -> Matrix:
-        cofactor_matrix = np.array([[self.adjunct(row, column)
+        cofactor_matrix = np.array([[round(self.adjunct(row, column), 6)
                                      for column in range(self.raw_matrix.shape[1])]
                                     for row in range(self.raw_matrix.shape[0])])
         return Matrix(cofactor_matrix)
@@ -250,6 +250,9 @@ Enter number of columns: 4
 if __name__ == "__main__":
     a = Matrix(np.array([[3.9, 9, -4], [1, 5, -8], [4, 2, -9]]))
     b = Matrix(np.array([[3, 9, -4], [1, 5, -9], [4, 2, -9]]))
+    K = Matrix(np.array([[1, 2, 2], [1, -1, 0], [0, -2, 0]]))
+    L = Matrix(np.array([[-0.2, 1.2, -0.8], [0.2, -0.2, -0.2], [0.2, -0.2, 0.3]]))
+    print(K ** -2)
     print(a.determinant())
     print(a.cofactor())
     print(a - b)

@@ -44,6 +44,7 @@ matrix_dict = {
                           ("F * H", -498240),
                           ("F * (H+4)", -676800),
                           ("(F-5)^2*H - 20*(H+13)", -698290230),
+                          ("3 - A*E", -543299522.042537),
                           ])
 def test_expression_find_determinant(expression, result):
     expession_handler = sy()
