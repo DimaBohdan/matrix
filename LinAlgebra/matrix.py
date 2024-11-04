@@ -33,21 +33,18 @@ class Matrix:
         return self.__rows_number == self.__columns_number
 
     @staticmethod
-    def same_dimension(
-            func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
+    def same_dimension(func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
         @wraps(func)
         def wrapper(this: Matrix, other: Matrix) -> Any:
             if this.matrix_shape == other.matrix_shape:
                 return func(this, other)
             else:
-                raise ValueError(
-                    "Matrices should have same dimensions to do this action!")
+                raise ValueError("Matrices should have same dimensions to do this action!")
 
         return wrapper
 
     @staticmethod
-    def is_multipliable(
-            func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
+    def is_multipliable(func: Callable[[Matrix, Matrix], Any]) -> Callable[[Matrix, Matrix], Any]:
         @wraps(func)
         def wrapper(this: Matrix, other: Matrix) -> Any:
             if this.matrix_shape[1] == other.matrix_shape[0]:
@@ -58,8 +55,7 @@ class Matrix:
         return wrapper
 
     @staticmethod
-    def only_squared(func: Callable[[Matrix, Any], Any]
-                     ) -> Callable[[Matrix, Any], Any]:
+    def only_squared(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
         @wraps(func)
         def wrapper(matrix: Matrix, *args: Any, **kwargs: Any) -> Any:
             if matrix.is_square:
@@ -70,8 +66,7 @@ class Matrix:
         return wrapper
 
     @staticmethod
-    def only_vector(func: Callable[[Matrix, Any], Any]
-                    ) -> Callable[[Matrix, Any], Any]:
+    def only_vector(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
         @wraps(func)
         def wrapper(self, *args, **kwargs) -> Any:
             if self.is_row_vector() or self.is_column_vector():
@@ -82,28 +77,24 @@ class Matrix:
         return wrapper
 
     @staticmethod
-    def only_invertible(
-            func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
+    def only_invertible(func: Callable[[Matrix, Any], Any]) -> Callable[[Matrix, Any], Any]:
         @wraps(func)
         def wrapper(self, *args, **kwargs) -> Any:
             if self.determinant() != 0:
                 return func(self, *args, **kwargs)
             else:
-                raise ValueError(
-                    "Matrix should be invertible to do this action!")
+                raise ValueError("Matrix should be invertible to do this action!")
 
         return wrapper
 
     @staticmethod
-    def only_able_to_power(
-            func: Callable[[Matrix, int], Any]) -> Callable[[Matrix, int], Any]:
+    def only_able_to_power(func: Callable[[Matrix, int], Any]) -> Callable[[Matrix, int], Any]:
         @wraps(func)
         def wrapper(self, power, *args, **kwargs) -> Any:
             if power % 1 == 0:
                 return func(self, power, *args, **kwargs)
             else:
-                raise ValueError(
-                    "Power should be a whole number to do this action!")
+                raise ValueError("Power should be a whole number to do this action!")
 
         return wrapper
 
@@ -124,24 +115,17 @@ class Matrix:
             if isinstance(self, Matrix) and isinstance(other, Matrix):
                 result = self.add_matrix(other)
             elif isinstance(other, int | float):
-                result = Matrix(
-                    self.raw_matrix +
-                    other *
-                    np.eye(
-                        self.matrix_shape[0],
-                        self.raw_matrix.shape[1]))
+                result = Matrix(self.raw_matrix + other * np.eye(self.matrix_shape[0],
+                                self.raw_matrix.shape[1]))
             else:
-                raise ValueError(
-                    f"Adding not supported between Matrix and {
-                        type(other)}")
+                raise ValueError(f"Adding not supported between Matrix and {type(other)}")
         return result
 
     def __radd__(self, other: int | float) -> Matrix:
         if isinstance(other, int | float):
             return self + other
         else:
-            raise ValueError(
-                f"Right-side adding not supported between Matrix and {type(other)}")
+            raise ValueError(f"Right-side adding not supported between Matrix and {type(other)}")
 
     @same_dimension
     def subtract_matrix(self, other: Matrix) -> Matrix:
@@ -153,25 +137,18 @@ class Matrix:
             if isinstance(self, Matrix) and isinstance(other, Matrix):
                 result = self.subtract_matrix(other)
             elif isinstance(other, int | float):
-                result = Matrix(
-                    self.raw_matrix -
-                    other *
-                    np.eye(
-                        self.matrix_shape[0],
-                        self.raw_matrix.shape[1]))
+                result = Matrix(self.raw_matrix - other * np.eye(self.matrix_shape[0],
+                                self.raw_matrix.shape[1]))
             else:
-                raise ValueError(
-                    f"Subtraction not supported between Matrix and {
-                        type(other)}")
+                raise ValueError(f"Subtraction not supported between Matrix and {type(other)}")
         return result
 
     def __rsub__(self, other: int | float) -> Matrix:
         if isinstance(other, int | float):
-            return Matrix(self.raw_matrix * (-1) + other * \
-                          np.eye(self.matrix_shape[0], self.raw_matrix.shape[1]))
+            return Matrix(self.raw_matrix * (-1) + other * np.eye(self.matrix_shape[0],
+                                self.raw_matrix.shape[1]))
         else:
-            raise ValueError(
-                f"Right-side subtraction not supported between Matrix and {type(other)}")
+            raise ValueError(f"Right-side subtraction not supported between Matrix and {type(other)}")
 
     @is_multipliable
     def multiply_matrix(self, other: Matrix) -> Matrix:
@@ -186,17 +163,14 @@ class Matrix:
             elif isinstance(other, (int, float)):
                 result = Matrix(result.raw_matrix * other)
             else:
-                raise ValueError(
-                    f"Multiplication not supported between Matrix and {
-                        type(other)}")
+                raise ValueError(f"Multiplication not supported between Matrix and {type(other)}")
         return result
 
     def __rmul__(self, other: int | float) -> Matrix:
         if isinstance(other, int | float):
             return Matrix(self.raw_matrix * other)
         else:
-            raise ValueError(
-                f"Right-side multiplication not supported between Matrix and {type(other)}")
+            raise ValueError(f"Right-side multiplication not supported between Matrix and {type(other)}")
 
     def __eq__(self, other: Self) -> bool:
         if not isinstance(other, Matrix):
@@ -205,13 +179,7 @@ class Matrix:
 
     @only_squared
     def sub_matrix(self, row: int = -1, column: int = -1) -> Matrix:
-        submatrix = np.delete(
-            np.delete(
-                self.raw_matrix,
-                row,
-                axis=0),
-            column,
-            axis=1)
+        submatrix = np.delete(np.delete(self.raw_matrix, row, axis=0), column, axis=1)
         return Matrix(submatrix)
 
     @only_squared
@@ -233,7 +201,7 @@ class Matrix:
             return float(self.raw_matrix[0, 0])
         elif self.__rows_number == 2:
             return float(self.raw_matrix[0, 0] * self.raw_matrix[1, 1] -
-                         self.raw_matrix[0, 1] * self.raw_matrix[1, 0])
+                    self.raw_matrix[0, 1] * self.raw_matrix[1, 0])
         else:
             determinant = 0
             for row in self.range_rows_number:
