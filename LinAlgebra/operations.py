@@ -6,6 +6,7 @@ import numpy as np
 
 operators = set('()+-*^T')
 
+
 class ShuntingYard:
     def __init__(self):
         self.operators = {
@@ -27,7 +28,7 @@ class ShuntingYard:
 
     def to_postfix(self, tokens: list) -> list:
         output_queue = []
-        operator_stack = [] #type: list[list]
+        operator_stack = []  # type: list[list]
 
         for token in tokens:
             if isinstance(token, (Matrix, int, float)):
@@ -75,9 +76,11 @@ def evaluate_postfix(tokens: list) -> Matrix | int | float:
 
     return stack[0]
 
+
 def tokenize(expression: str, matrices_dict: dict) -> list:
     tokens = []
     temp = ''
+
     def add_temp_token(temp: str | int | float):
         if re.match(r'^\d*\.?\d+$', temp):
             tokens.append(float(temp) if '.' in temp else int(temp))
@@ -85,7 +88,8 @@ def tokenize(expression: str, matrices_dict: dict) -> list:
             try:
                 tokens.append(matrices_dict[temp])
             except KeyError:
-                raise ValueError(f"Unknown variable or matrix '{temp}' in expression.")
+                raise ValueError(
+                    f"Unknown variable or matrix '{temp}' in expression.")
 
     for char in expression:
         if char in operators:
@@ -100,9 +104,13 @@ def tokenize(expression: str, matrices_dict: dict) -> list:
     add_temp_token(temp)
     return tokens
 
-def evaluate_expression(expression: str, matrix_dict: Dict[str, List[List[str | int | float]]]):
+
+def evaluate_expression(expression: str,
+                        matrix_dict: Dict[str,
+                                          List[List[str | int | float]]]):
     try:
-        matrix_vars = {name: Matrix(np.array(value)) for name, value in matrix_dict.items()}
+        matrix_vars = {name: Matrix(np.array(value))
+                       for name, value in matrix_dict.items()}
         sy = ShuntingYard
         expression_handler = ShuntingYard()
         tokens = tokenize(expression, matrix_vars)
