@@ -1,4 +1,6 @@
 """LinAlgebra Package
+This part of project is dedicated to the basic topic of linear algebra - operations with
+matrices.
 """
 from .matrix import Matrix
 from .operations import ShuntingYard, evaluate_expression

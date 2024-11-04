@@ -270,4 +270,3 @@ class Matrix:
             base_matrix *= base_matrix
             power //= 2
         return result
-print(Matrix(np.array([[3, 45, 5], [4, 3.2, 1]])))

@@ -104,7 +104,6 @@ def tokenize(expression: str, matrices_dict: dict) -> list:
     add_temp_token(temp)
     return tokens
 
-
 def evaluate_expression(expression: str,
                         matrix_dict: Dict[str,
                                           List[List[str | int | float]]]):
