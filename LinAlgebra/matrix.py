@@ -238,21 +238,3 @@ class Matrix:
             base_matrix *= base_matrix
             power //= 2
         return result
-
-'''
-Enter number of rows: 4
-Enter number of columns: 4
-2 3 4 1
-8 9 2 6
-2 4 5 9
-8 1 3 2
-'''
-if __name__ == "__main__":
-    a = Matrix(np.array([[3.9, 9, -4], [1, 5, -8], [4, 2, -9]]))
-    b = Matrix(np.array([[3, 9, -4], [1, 5, -9], [4, 2, -9]]))
-    K = Matrix(np.array([[1, 2, 2], [1, -1, 0], [0, -2, 0]]))
-    L = Matrix(np.array([[-0.2, 1.2, -0.8], [0.2, -0.2, -0.2], [0.2, -0.2, 0.3]]))
-    print(K ** -2)
-    print(a.determinant())
-    print(a.cofactor())
-    print(a - b)

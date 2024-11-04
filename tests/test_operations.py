@@ -3,7 +3,7 @@ import pytest
 import csv
 
 from LinAlgebra.matrix import Matrix
-from LinAlgebra.operations import ShuntingYard as sy
+from LinAlgebra.operations import ShuntingYard as sy, tokenize, evaluate_postfix
 A = Matrix(np.array([[3, 5, 2, 12],
                      [12, 3, 45, 3],
                      [1, 3, -3, 8],
@@ -47,8 +47,8 @@ matrix_dict = {
                           ("3 - A*E", -543299522.042537),
                           ])
 def test_expression_find_determinant(expression, result):
-    expession_handler = sy()
-    tokens = sy.tokenize(expression, matrix_dict)
-    postfix = sy.to_postfix(expession_handler, tokens)
-    actual_result = sy.evaluate_postfix(postfix)
+    expression_handler = sy()
+    tokens = tokenize(expression, matrix_dict)
+    postfix = sy.to_postfix(expression_handler, tokens)
+    actual_result = evaluate_postfix(postfix)
     assert float(actual_result.determinant()) == result

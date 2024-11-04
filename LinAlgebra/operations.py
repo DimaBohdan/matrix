@@ -1,4 +1,4 @@
-import csv
+from typing import Dict, List
 
 from LinAlgebra.matrix import Matrix
 import re
@@ -51,53 +51,63 @@ class ShuntingYard:
 
         return output_queue
 
-    @staticmethod
-    def evaluate_postfix(tokens: list) -> Matrix | int | float:
-        stack = []
-        for token in tokens:
-            if isinstance(token, (Matrix, int, float)):
-                stack.append(token)
-            elif token in operators:
-                if token == "T":
-                    a = stack.pop()
-                    stack.append(a.transpose())
-                else:
-                    b = stack.pop()
-                    a = stack.pop()
-                    if token == "+":
-                        stack.append(a + b)
-                    elif token == "-":
-                        stack.append(a - b)
-                    elif token == "*":
-                        stack.append(a * b)
-                    elif token == "^":
-                        stack.append(a ** b)
 
-        return stack[0]
+def evaluate_postfix(tokens: list) -> Matrix | int | float:
+    stack = []
+    for token in tokens:
+        if isinstance(token, (Matrix, int, float)):
+            stack.append(token)
+        elif token in operators:
+            if token == "T":
+                a = stack.pop()
+                stack.append(a.transpose())
+            else:
+                b = stack.pop()
+                a = stack.pop()
+                if token == "+":
+                    stack.append(a + b)
+                elif token == "-":
+                    stack.append(a - b)
+                elif token == "*":
+                    stack.append(a * b)
+                elif token == "^":
+                    stack.append(a ** b)
 
-    @staticmethod
-    def tokenize(expression: str, matrices_dict: dict) -> list:
-        tokens = []
-        temp = ''
-        def add_temp_token(temp: str):
-            if re.match(r'^\d*\.?\d+$', temp):  # Recognize floating point numbers
-                tokens.append(float(temp) if '.' in temp else int(temp))
-            elif temp:  # Check if temp is not empty
-                try:
-                    tokens.append(matrices_dict[temp])
-                except KeyError:
-                    raise ValueError(f"Unknown variable or matrix '{temp}' in expression.")
+    return stack[0]
 
-      # Use a set for efficient lookup
-        for char in expression:
-            if char in operators:
-                add_temp_token(temp)
-                temp = ''  # Reset temp
-                tokens.append(char)
-            elif char.isalnum() or char == '.':
-                temp += char
-            elif char.isspace():
-                add_temp_token(temp)
-                temp = ''
-        add_temp_token(temp)
-        return tokens
+def tokenize(expression: str, matrices_dict: dict) -> list:
+    tokens = []
+    temp = ''
+    def add_temp_token(temp: str | int | float):
+        if re.match(r'^\d*\.?\d+$', temp):
+            tokens.append(float(temp) if '.' in temp else int(temp))
+        elif temp:  # Check if temp is not empty
+            try:
+                tokens.append(matrices_dict[temp])
+            except KeyError:
+                raise ValueError(f"Unknown variable or matrix '{temp}' in expression.")
+
+    for char in expression:
+        if char in operators:
+            add_temp_token(temp)
+            temp = ''  # Reset temp
+            tokens.append(char)
+        elif char.isalnum() or char == '.':
+            temp += char
+        elif char.isspace():
+            add_temp_token(temp)
+            temp = ''
+    add_temp_token(temp)
+    return tokens
+
+def evaluate_expression(expression: str, matrix_dict: Dict[str, List[List[str | int | float]]]):
+    try:
+        matrix_vars = {name: Matrix(np.array(value)) for name, value in matrix_dict.items()}
+        sy = ShuntingYard
+        expression_handler = ShuntingYard()
+        tokens = tokenize(expression, matrix_vars)
+        postfix = sy.to_postfix(expression_handler, tokens)
+        actual_result = evaluate_postfix(postfix)
+        return actual_result.raw_matrix.tolist()
+    except Exception as e:
+        raise ValueError(f"Error in evaluating expression: {e}")
